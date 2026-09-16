@@ -453,9 +453,9 @@ a tree that does not produce them, which is the one claim this header exists to 
    main, not a tree you have not committed. The manifest is outside the fenced paths, so the repin
    may sit uncommitted while you record. After merging main the pin is the merge commit, since that
    is the last commit to touch a fenced path and the only tree the fence can match.
-3. Re-record everything, not a subset: `RPC_FOUNDATION_RECORD=1 pnpm --dir mobile exec tsx
-   scripts/rpc-recording.mts --record`. The repin rewrites the `baseline` header of every golden,
-   so every file moves and a partial refresh would leave the corpus pinned to two different trees.
+3. Re-record everything, not a subset, with the `--record` command above. The repin rewrites the
+   `baseline` header of every golden, so every file moves and a partial refresh would leave the
+   corpus pinned to two different trees.
 4. Prove the delta by decoding the value pool of every golden against the branch point and sorting
    the files into four classes: header-only with `baseline` the only moved key, body moved, added,
    deleted. The disclosed behaviour change is exactly the body-moved set; anything else in the last
