@@ -3,7 +3,7 @@
   "family": "hostedReview.create-intent",
   "namedDeltas": [],
   "runnerVersion": 1,
-  "baseline": "e7206f62a827f4fe0a2badf3eecd2167b8ac4285",
+  "baseline": "f741b2ea8240142d6c5f1a068318d3e757369ba0",
   "lockfileSha256": "788c1234b38a61fc882fca292341fce6690deee9cc6695673b0575cf2c4cf571",
   "recorderSha256": "9f19bd485ecf9c7fe7a3323e5458dbf484f208c9ad3e7dd516c83e00af18904d",
   "adapterSha256": "c582ce355b0704b38d7e84cbce352630096c91231bf09aecd1f6dbb409fed17f",
@@ -598,33 +598,6 @@
       "name": "git.status#1",
       "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"git.status\",\"params\":{\"worktree\":\"id:repo42::/p\"}}"
     },
-    "620ca79ead87": {
-      "outcome": {
-        "committed": true,
-        "error": "incompatible_reply: hostedReview.create (hostedReview.create)",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "658bb4ca2398": {
       "status": "fulfilled",
       "startedAt": 0,
@@ -1160,6 +1133,36 @@
         }
       }
     },
+    "a60029c6316a": {
+      "status": "fulfilled",
+      "startedAt": 0,
+      "settledAt": 0,
+      "value": {
+        "committed": true,
+        "error": "The host sent a reply this app could not read (hostedReview.create)",
+        "ok": false,
+        "status": {
+          "branch": "feature",
+          "conflictOperation": "unknown",
+          "entries": [],
+          "head": "def5678",
+          "upstreamStatus": {
+            "ahead": 0,
+            "behind": 0,
+            "behindCommitsArePatchEquivalent": {
+              "$rpc": "undefined"
+            },
+            "hasConfiguredPushTarget": {
+              "$rpc": "undefined"
+            },
+            "hasUpstream": true,
+            "upstreamName": {
+              "$rpc": "undefined"
+            }
+          }
+        }
+      }
+    },
     "a6f6cd5af9d1": {
       "name": "git.status#2",
       "args": [
@@ -1308,36 +1311,6 @@
           "ok": true,
           "result": {
             "ok": true
-          }
-        }
-      }
-    },
-    "b0c6e557c96f": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": "incompatible_reply: hostedReview.create (hostedReview.create)",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
           }
         }
       }
@@ -1686,6 +1659,33 @@
     "eab004af0939": {
       "name": "hostedReview.getCreationEligibility#2",
       "json": "{\"id\":\"frame-10\",\"deviceToken\":\"recording-device\",\"method\":\"hostedReview.getCreationEligibility\",\"params\":{\"repo\":\"id:repo42\",\"worktree\":\"id:repo42::/p\",\"branch\":\"feature\",\"base\":null,\"hasUncommittedChanges\":false,\"hasUpstream\":true,\"ahead\":0,\"behind\":0,\"linkedGitHubPR\":null,\"linkedGitLabMR\":null}}"
+    },
+    "f86f448044b9": {
+      "outcome": {
+        "committed": true,
+        "error": "The host sent a reply this app could not read (hostedReview.create)",
+        "ok": false,
+        "status": {
+          "branch": "feature",
+          "conflictOperation": "unknown",
+          "entries": [],
+          "head": "def5678",
+          "upstreamStatus": {
+            "ahead": 0,
+            "behind": 0,
+            "behindCommitsArePatchEquivalent": {
+              "$rpc": "undefined"
+            },
+            "hasConfiguredPushTarget": {
+              "$rpc": "undefined"
+            },
+            "hasUpstream": true,
+            "upstreamName": {
+              "$rpc": "undefined"
+            }
+          }
+        }
+      }
     }
   },
   "recording": {
@@ -1925,9 +1925,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "b0c6e557c96f"
+            "run": "a60029c6316a"
           },
-          "state": "620ca79ead87",
+          "state": "f86f448044b9",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -1967,9 +1967,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "b0c6e557c96f"
+            "run": "a60029c6316a"
           },
-          "state": "620ca79ead87",
+          "state": "f86f448044b9",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -2009,9 +2009,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "b0c6e557c96f"
+            "run": "a60029c6316a"
           },
-          "state": "620ca79ead87",
+          "state": "f86f448044b9",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -2093,9 +2093,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "b0c6e557c96f"
+            "run": "a60029c6316a"
           },
-          "state": "620ca79ead87",
+          "state": "f86f448044b9",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",

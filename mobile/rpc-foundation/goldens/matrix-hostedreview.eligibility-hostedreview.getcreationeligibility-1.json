@@ -3,7 +3,7 @@
   "family": "hostedReview.eligibility",
   "namedDeltas": [],
   "runnerVersion": 1,
-  "baseline": "e7206f62a827f4fe0a2badf3eecd2167b8ac4285",
+  "baseline": "f741b2ea8240142d6c5f1a068318d3e757369ba0",
   "lockfileSha256": "788c1234b38a61fc882fca292341fce6690deee9cc6695673b0575cf2c4cf571",
   "recorderSha256": "9f19bd485ecf9c7fe7a3323e5458dbf484f208c9ad3e7dd516c83e00af18904d",
   "adapterSha256": "c582ce355b0704b38d7e84cbce352630096c91231bf09aecd1f6dbb409fed17f",
@@ -13,6 +13,17 @@
   "projectionVersion": 2,
   "goldenFormatVersion": 5,
   "values": {
+    "067b33e5b1a9": {
+      "status": "rejected",
+      "startedAt": 0,
+      "settledAt": 0,
+      "error": {
+        "category": "RpcIncompatibleReplyError",
+        "message": "The host sent a reply this app could not read (hostedReview.getCreationEligibility)",
+        "isRpcDeliveryUnknown": false,
+        "code": "incompatible_reply"
+      }
+    },
     "099a55e691ed": {
       "name": "hostedReview.getCreationEligibility#1",
       "args": [
@@ -223,16 +234,6 @@
         "title": "Host title"
       },
       "prefill": "unresolved"
-    },
-    "3ae28402dc87": {
-      "status": "rejected",
-      "startedAt": 0,
-      "settledAt": 0,
-      "error": {
-        "category": "RpcIncompatibleReplyError",
-        "message": "incompatible_reply: hostedReview.creation-eligibility-or-skip (hostedReview.getCreationEligibility)",
-        "isRpcDeliveryUnknown": false
-      }
     },
     "485a0942bda3": {
       "eligibility": "unfetched",
@@ -670,7 +671,7 @@
           "sender": ["099a55e691ed"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "3ae28402dc87"
+            "fetch": "067b33e5b1a9"
           },
           "state": "485a0942bda3",
           "effects": []
@@ -682,7 +683,7 @@
           "sender": ["1c4e890f9aaf"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "3ae28402dc87"
+            "fetch": "067b33e5b1a9"
           },
           "state": "485a0942bda3",
           "effects": []
@@ -694,7 +695,7 @@
           "sender": ["8cef4aaa067c"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "3ae28402dc87"
+            "fetch": "067b33e5b1a9"
           },
           "state": "485a0942bda3",
           "effects": []
@@ -706,7 +707,7 @@
           "sender": ["6c52d90237b7"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "3ae28402dc87"
+            "fetch": "067b33e5b1a9"
           },
           "state": "485a0942bda3",
           "effects": []
@@ -718,7 +719,7 @@
           "sender": ["fed21873c57f"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "3ae28402dc87"
+            "fetch": "067b33e5b1a9"
           },
           "state": "485a0942bda3",
           "effects": []

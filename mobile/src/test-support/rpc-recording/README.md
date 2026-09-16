@@ -378,6 +378,32 @@ ORCA_BACKGROUND_LAUNCH=1 RPC_FOUNDATION_RECORD=1 \
 A re-record is a claim about behaviour. State the cause in the commit; every golden the refresh
 moves should have one.
 
+### Recording a behaviour change
+
+A change that moves what a screen observes cannot be recorded from main's pin: the fence compares
+the working tree against `baseline`, so the migrated source has to be what `baseline` names. Do not
+record into a scratch directory and copy the moved files back — that leaves those goldens pinned to
+a tree that does not produce them, which is the one claim this header exists to make.
+
+1. Land the product change first, so every fenced path (`mobile/src`, `src/shared`,
+   `mobile/pnpm-lock.yaml`) is final and committed.
+2. Repin `baseline` in `pilot-scenarios.json` to that commit on your own branch. Nothing else: not
+   main, not a tree you have not committed. The manifest is outside the fenced paths, so the repin
+   may sit uncommitted while you record.
+3. Re-record everything, not a subset: `RPC_FOUNDATION_RECORD=1 pnpm --dir mobile exec tsx
+   scripts/rpc-recording.mts --record`. The repin rewrites the `baseline` header of every golden,
+   so every file moves and a partial refresh would leave the corpus pinned to two different trees.
+4. Prove the delta by decoding the value pool of every golden against the branch point and sorting
+   the files into four classes: header-only with `baseline` the only moved key, body moved, added,
+   deleted. The disclosed behaviour change is exactly the body-moved set; anything else in the last
+   three classes is an unintended move to explain before committing. `scenarioSha256` hashes the
+   derived scenarios, not the manifest, so a repin alone moves no other header key.
+5. Commit the repin and the refresh together, and state the cause.
+
+After a squash-merge the pinned sha is unreachable from main, so the next recording on main repins
+to main's tip in a follow-up — the same two-step #20563 and #20895 used. A reviewer checking an
+in-flight branch resolves the pin against the branch, where it is a real commit.
+
 Editing the recorder engine on a migration branch is the awkward case: `recorderSha256` moves, so
 every golden needs rewriting, but the product tree no longer matches `baseline`, and bumping
 `baseline` to the branch would record the migrated source and make the parity claim circular. Record
