@@ -18,7 +18,7 @@ import { salvagingArray } from '../../../src/shared/zod-salvage'
  * optional here even where the host type declares them required — an older host that omits one
  * must still render a history list.
  */
-export const gitHistoryItemSchema = z.looseObject({
+const gitHistoryItemSchema = z.looseObject({
   id: z.string(),
   parentIds: z.array(z.string()),
   subject: z.string().optional(),

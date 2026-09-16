@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { salvagedOptional } from '../../../src/shared/zod-salvage'
+import { openEnum, salvagedOptional } from '../../../src/shared/zod-salvage'
 
 // `hostedReview.getCreationEligibility` and `hostedReview.create`. Checked against
 // HostedReviewCreationEligibility and CreateHostedReviewResult in src/shared/hosted-review.ts,
@@ -29,7 +29,7 @@ const HOSTED_REVIEW_PROVIDER = [
  * main did and what keeps a newer host from blocking create on this screen.
  */
 export const hostedReviewEligibilitySchema = z.looseObject({
-  provider: z.enum(HOSTED_REVIEW_PROVIDER),
+  provider: openEnum(HOSTED_REVIEW_PROVIDER, 'unsupported'),
   canCreate: salvagedOptional('canCreate', z.boolean()),
   blockedReason: salvagedOptional('blockedReason', z.string().nullable()),
   nextAction: salvagedOptional('nextAction', z.string().nullable()),

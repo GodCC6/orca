@@ -20,5 +20,3 @@ export const worktreeSummaryReplySchema = z.object({
     .nullable()
     .optional()
 })
-
-export type MobileWorktreeSummaryReply = z.output<typeof worktreeSummaryReplySchema>

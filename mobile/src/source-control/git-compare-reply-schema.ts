@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { salvagedOptional, salvagingArray } from '../../../src/shared/zod-salvage'
+import { openEnum, salvagedOptional, salvagingArray } from '../../../src/shared/zod-salvage'
 
 // The three compare replies the Changes screen and the history list read: `git.branchCompare`,
 // `git.commitCompare` and `git.branchDiff`. Checked against GitBranchCompareResult,
@@ -23,9 +23,9 @@ const GIT_BRANCH_COMPARE_STATUS = [
  * behind a truthy check. It never reads `status`, so this list does not require it — the two
  * compare replies share a host type but not a set of readers.
  */
-export const gitChangedFileSchema = z.looseObject({
+const gitChangedFileSchema = z.looseObject({
   path: z.string(),
-  status: z.enum(GIT_BRANCH_CHANGE_STATUS).optional(),
+  status: openEnum(GIT_BRANCH_CHANGE_STATUS, 'modified').optional(),
   oldPath: z.string().optional(),
   added: z.number().optional(),
   removed: z.number().optional()
@@ -36,8 +36,8 @@ export const gitChangedFileSchema = z.looseObject({
  * `status` with no guard (MobileSourceControlFileRows.tsx:219-220) and sorts on `path`
  * (mobile-branch-compare.ts:27).
  */
-export const gitBranchChangeEntrySchema = gitChangedFileSchema.extend({
-  status: z.enum(GIT_BRANCH_CHANGE_STATUS)
+const gitBranchChangeEntrySchema = gitChangedFileSchema.extend({
+  status: openEnum(GIT_BRANCH_CHANGE_STATUS, 'modified')
 })
 
 /**
@@ -46,10 +46,10 @@ export const gitBranchChangeEntrySchema = gitChangedFileSchema.extend({
  * use-mobile-source-control-state.ts:149 reads `summary.status` again. `headOid` and `mergeBase`
  * gate the branch-diff open (:50) and are nullable in the host type, so both stay nullable here.
  */
-export const gitBranchCompareSummarySchema = z.looseObject({
+const gitBranchCompareSummarySchema = z.looseObject({
   baseRef: z.string(),
   changedFiles: z.number(),
-  status: z.enum(GIT_BRANCH_COMPARE_STATUS),
+  status: openEnum(GIT_BRANCH_COMPARE_STATUS, 'error'),
   baseOid: z.string().nullable().optional(),
   compareRef: z.string().optional(),
   headOid: z.string().nullable().optional(),
@@ -88,11 +88,11 @@ const gitDiffTextSchema = z.looseObject({
   modifiedContent: z.string()
 })
 
-// Renamed to one discriminant so the consumer's `kind !== 'text'` still narrows; the host's own
-// kind rides along for a diagnostic rather than being thrown away.
+// Renamed to one discriminant so the consumer's `kind !== 'text'` still narrows. The host's own
+// kind is dropped rather than carried: nothing reads it.
 const gitDiffOtherKindSchema = z
   .object({ kind: z.string() })
-  .transform((value) => ({ kind: 'not-text' as const, hostKind: value.kind }))
+  .transform(() => ({ kind: 'not-text' as const }))
 
 export const gitDiffResultSchema = z.union([gitDiffTextSchema, gitDiffOtherKindSchema])
 
@@ -100,5 +100,4 @@ export type MobileGitChangedFile = z.output<typeof gitChangedFileSchema>
 export type MobileGitBranchChangeEntry = z.output<typeof gitBranchChangeEntrySchema>
 export type MobileGitBranchCompareSummary = z.output<typeof gitBranchCompareSummarySchema>
 export type MobileGitBranchCompareReply = z.output<typeof gitBranchCompareResultSchema>
-export type MobileGitCommitCompareReply = z.output<typeof gitCommitCompareResultSchema>
 export type MobileGitDiffReply = z.output<typeof gitDiffResultSchema>

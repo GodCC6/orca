@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { collectSalvageDrops } from '../../../src/shared/zod-salvage'
+import {
+  gitBranchCompareResultSchema,
+  gitCommitCompareResultSchema
+} from './git-compare-reply-schema'
 import { gitHistoryResultSchema } from './git-history-reply-schema'
 import { gitStatusHostPayloadSchema, gitStatusProjectionSchema } from './git-status-reply-schema'
 import { hostedReviewEligibilitySchema } from './hosted-review-reply-schema'
@@ -78,5 +82,102 @@ describe('source-control reply schemas', () => {
     expect(salvaged.value.success).toBe(true)
     expect(salvaged.droppedCount).toBe(1)
     expect(salvaged.droppedPaths).toEqual(['1'])
+  })
+})
+
+// One per open enum: the arm set is a wire surface, so an arm this build does not know degrades to
+// a member its readers already handle. The three probed values are the ones a reviewer sent against
+// the closed version, where each refused a reply every declared reader could have rendered.
+
+const STATUS_ENTRY = { path: 'src/app.ts', status: 'modified', area: 'staged' }
+
+describe('an enum arm this build does not know', () => {
+  it('degrades a compare summary status rather than refusing the whole compare', () => {
+    const parsed = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 1, status: 'shallow-base' }
+    })
+    expect(parsed.data?.summary.status).toBe('error')
+    const absent = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 1 }
+    })
+    expect(absent.success).toBe(false)
+    const wrongType = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 1, status: 7 }
+    })
+    expect(wrongType.success).toBe(false)
+  })
+
+  it('degrades a branch entry status rather than dropping the row', () => {
+    const parsed = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 1, status: 'ready' },
+      entries: [{ path: 'src/app.ts', status: 'typechange' }]
+    })
+    expect(parsed.data?.entries?.[0]?.status).toBe('modified')
+    const absent = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 1, status: 'ready' },
+      entries: [{ path: 'src/app.ts' }]
+    })
+    expect(absent.data?.entries).toHaveLength(0)
+  })
+
+  it('degrades an optional changed-file status rather than dropping the row', () => {
+    const parsed = gitCommitCompareResultSchema.safeParse({
+      entries: [{ path: 'src/app.ts', status: 'typechange' }]
+    })
+    expect(parsed.data?.entries[0]?.status).toBe('modified')
+    const absent = gitCommitCompareResultSchema.safeParse({ entries: [{ path: 'src/app.ts' }] })
+    expect(absent.data?.entries[0]?.status).toBeUndefined()
+  })
+
+  it('degrades a working-tree entry status rather than dropping the row', () => {
+    const parsed = gitStatusHostPayloadSchema.safeParse({
+      entries: [{ ...STATUS_ENTRY, status: 'typechange' }]
+    })
+    expect(parsed.data?.entries[0]?.status).toBe('modified')
+    const absent = gitStatusHostPayloadSchema.safeParse({
+      entries: [{ path: 'src/app.ts', area: 'staged' }]
+    })
+    expect(absent.data?.entries).toHaveLength(0)
+  })
+
+  it('degrades the same status inside the normalized projection', () => {
+    const projected = gitStatusProjectionSchema.parse({
+      entries: [{ ...STATUS_ENTRY, status: 'typechange' }]
+    })
+    expect(projected?.entries[0]?.status).toBe('modified')
+  })
+
+  it('keeps a row whose conflict tokens it does not know, reading them as absent', () => {
+    const parsed = gitStatusHostPayloadSchema.safeParse({
+      entries: [
+        {
+          ...STATUS_ENTRY,
+          conflictKind: 'both_renamed',
+          conflictStatus: 'resolved_upstream',
+          conflictStatusSource: 'relay'
+        }
+      ]
+    })
+    expect(parsed.data?.entries).toHaveLength(1)
+    expect(parsed.data?.entries[0]?.conflictKind).toBeUndefined()
+    expect(parsed.data?.entries[0]?.conflictStatus).toBeUndefined()
+    expect(parsed.data?.entries[0]?.conflictStatusSource).toBeUndefined()
+  })
+
+  it('degrades a hosted-review provider rather than refusing the eligibility', () => {
+    const parsed = hostedReviewEligibilitySchema.safeParse({ provider: 'codeberg' })
+    expect(parsed.data?.provider).toBe('unsupported')
+    expect(hostedReviewEligibilitySchema.safeParse({}).success).toBe(false)
+    expect(hostedReviewEligibilitySchema.safeParse({ provider: 7 }).success).toBe(false)
+  })
+
+  it('still drops a row whose staging area it does not know', () => {
+    // The one closed set left: every arm offers stage, unstage or commit, so an unknown area has
+    // no member to degrade to that would not offer an action against a row this build cannot place.
+    const parsed = gitStatusHostPayloadSchema.safeParse({
+      entries: [{ ...STATUS_ENTRY, area: 'stashed' }]
+    })
+    expect(parsed.success).toBe(true)
+    expect(parsed.data?.entries).toHaveLength(0)
   })
 })

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { salvagedOptional, salvagingArray } from '../../../src/shared/zod-salvage'
+import { openEnum, salvagedOptional, salvagingArray } from '../../../src/shared/zod-salvage'
 
 // Schemas for the two `git.status` replies mobile reads. Checked against the host's published
 // shape in src/shared/git-status-types.ts (GitStatusResult / GitUncommittedEntry), which is what
@@ -31,20 +31,25 @@ const GIT_CONFLICT_OPERATION = ['merge', 'rebase', 'cherry-pick', 'unknown'] as 
  * use-mobile-source-control-state.ts:122 sections by `entry.area`, mobile-git-status.ts:63 sorts on
  * `entry.path`, and MOBILE_GIT_STATUS_LABELS is indexed by `entry.status`. The rest are optional in
  * the host type and read through a guard or a default, so they stay optional here.
+ *
+ * `area` is the one closed set left in this module. Every arm carries an affordance — stage,
+ * unstage, commit — so coercing an unknown area to one of them would offer an action against a row
+ * whose real area this build does not know. Main rendered such a row in no section and made it
+ * neither stageable nor openable, so dropping it costs only its count in `hasUncommittedChanges`.
  */
-export const gitStatusEntrySchema = z.looseObject({
+const gitStatusEntrySchema = z.looseObject({
   path: z.string(),
-  status: z.enum(GIT_FILE_STATUS),
+  status: openEnum(GIT_FILE_STATUS, 'modified'),
   area: z.enum(GIT_STAGING_AREA),
   oldPath: z.string().optional(),
-  conflictKind: z.enum(GIT_CONFLICT_KIND).optional(),
-  conflictStatus: z.enum(GIT_CONFLICT_STATUS).optional(),
-  conflictStatusSource: z.enum(GIT_CONFLICT_SOURCE).optional(),
+  conflictKind: openEnum(GIT_CONFLICT_KIND, undefined).optional(),
+  conflictStatus: openEnum(GIT_CONFLICT_STATUS, undefined).optional(),
+  conflictStatusSource: openEnum(GIT_CONFLICT_SOURCE, undefined).optional(),
   added: z.number().optional(),
   removed: z.number().optional()
 })
 
-export const gitUpstreamStatusSchema = z.looseObject({
+const gitUpstreamStatusSchema = z.looseObject({
   hasUpstream: z.boolean(),
   ahead: z.number(),
   behind: z.number(),
@@ -113,7 +118,7 @@ const projectedUpstreamStatusSchema = z
 const projectedEntrySchema = z.object({
   // `.min(1)` because main's `!path` drop is falsy, not nullish: an empty path was never a row.
   path: z.string().min(1),
-  status: z.enum(GIT_FILE_STATUS),
+  status: openEnum(GIT_FILE_STATUS, 'modified'),
   area: z.enum(GIT_STAGING_AREA),
   oldPath: salvagedOptional('oldPath', z.string()),
   conflictStatus: salvagedOptional('conflictStatus', z.enum(GIT_CONFLICT_STATUS)),
@@ -129,7 +134,6 @@ const projectedEntrySchema = z.object({
  * record, or whose `entries` is not an array, is a decoded `null`, not an incompatible reply.
  * Three call sites route on that null — a refused status must leave their screens alone — so
  * tightening it is a product decision with its own expectation, not part of this step.
- * The gain here is the salvage report: a dropped row now names its index instead of vanishing.
  */
 export const gitStatusProjectionSchema: z.ZodType<MobileGitStatusProjection | null, unknown> = z
   .object({

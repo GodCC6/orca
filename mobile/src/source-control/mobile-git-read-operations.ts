@@ -36,8 +36,7 @@ export const gitStatusHostPayloadRead = bindDeferredRpcOperation(
  * Shared with the session's branch-context read, which wants the same projection under a skip.
  *
  * Still always compatible: the projection's own contract is that an unreadable payload is a null
- * status, which three screens route on. What the schema adds is the salvage report — a dropped
- * entry now arrives as `salvage.droppedPaths` instead of silently thinning the list.
+ * status, which three screens route on.
  */
 export const gitStatusProjectionReader: RpcCompatibleReader<
   unknown,
