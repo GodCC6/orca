@@ -8,7 +8,7 @@ import {
 import { isRpcDeliveryUnknown, markRpcDeliveryUnknown } from './rpc-delivery-ambiguity'
 import {
   RPC_INCOMPATIBLE_REPLY_CODE,
-  RpcIncompatibleReplyError,
+  RpcIncompatibleReplyError
 } from './rpc-incompatible-reply-error'
 import { captureRpcOperationSettlement, runRpcOperation } from './rpc-operation'
 import {

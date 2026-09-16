@@ -23,9 +23,11 @@ export type RecordMobileCommitFailure = (failure: MobileCommitFailureRecovery | 
 export function getMobileCommitFailureStagedEntries(
   entries: readonly MobileGitStatusEntry[] | undefined
 ): MobileCommitFailureStagedEntry[] {
-  return (entries ?? [])
-    .filter((entry) => entry.area === 'staged')
-    // 'staged' literal, not `entry.area`: the filter above is what makes it one, and the schema's
-    // area is optional so an unplaceable row could not be typed through here.
-    .map((entry) => ({ path: entry.path, status: entry.status, area: 'staged' as const }))
+  return (
+    (entries ?? [])
+      .filter((entry) => entry.area === 'staged')
+      // 'staged' literal, not `entry.area`: the filter above is what makes it one, and the schema's
+      // area is optional so an unplaceable row could not be typed through here.
+      .map((entry) => ({ path: entry.path, status: entry.status, area: 'staged' as const }))
+  )
 }

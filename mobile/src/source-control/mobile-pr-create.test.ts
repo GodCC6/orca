@@ -349,7 +349,11 @@ describe('resolveMobilePrPrefill', () => {
   })
 
   it('asks the user to retry after a transport rejection', async () => {
-    const rejecting = { sendRequest: vi.fn(async () => Promise.reject(new Error('offline'))) }
+    const rejecting = {
+      sendRequest: vi.fn(async () => {
+        throw new Error('offline')
+      })
+    }
     const prefill = await resolveMobilePrPrefill(rejecting, 'repo-1::/tmp/wt', baseArgs)
     expect(prefill.canCreate).toBeUndefined()
     expect(getMobilePrCreateBlockMessage(prefill)).toBe(UNCONFIRMED)
