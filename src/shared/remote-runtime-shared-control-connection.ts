@@ -121,23 +121,20 @@ export class RemoteRuntimeSharedControlConnection {
     }
   }
 
-  private publishDiagnostics(): void {
-    this.diagnostics.publish({
+  private diagnosticsInputs(): Parameters<SharedControlDiagnosticsTracker['get']>[0] {
+    return {
       state: this.state,
       reconnecting: this.reconnect.isScheduled,
       pendingRequestCount: this.pendingRequests.size,
       subscriptionCount: this.subscriptions.size,
       reconnectAttempt: this.reconnect.attemptCount
-    })
+    }
+  }
+  private publishDiagnostics(): void {
+    this.diagnostics.publish(this.diagnosticsInputs())
   }
   getDiagnostics(): SharedControlTypes.RemoteRuntimeSharedConnectionDiagnostics {
-    return this.diagnostics.get({
-      state: this.state,
-      reconnecting: this.reconnect.isScheduled,
-      pendingRequestCount: this.pendingRequests.size,
-      subscriptionCount: this.subscriptions.size,
-      reconnectAttempt: this.reconnect.attemptCount
-    })
+    return this.diagnostics.get(this.diagnosticsInputs())
   }
   reconnectNow(): void {
     refreshRemoteRuntimeSharedControl({
@@ -190,7 +187,9 @@ export class RemoteRuntimeSharedControlConnection {
       onTextFrame: (frame) => this.handleTextFrame(frame, socketGeneration),
       liveness: {
         options: this.options.liveness,
-        onDead: (error) => this.handleSocketClosed(error, socketGeneration)
+        onDead: (error) => this.handleSocketClosed(error, socketGeneration),
+        isRetired: () => this.options.isEnvironmentRemoved?.() ?? false,
+        onRetired: () => this.options.onEnvironmentRemoved?.()
       }
     })
     if (!opened.ok) {
@@ -283,6 +282,7 @@ export class RemoteRuntimeSharedControlConnection {
     this.reconnect.scheduleAfterSocketClose({
       intentionallyClosed: this.intentionallyClosed,
       manuallyDisconnected: this.options.isManuallyDisconnected?.() ?? false,
+      environmentRemoved: this.options.isEnvironmentRemoved?.() ?? false,
       capabilityPaused: this.options.isCapabilityPaused?.() ?? false,
       subscriptionCount: this.subscriptions.size,
       open: () => this.open()

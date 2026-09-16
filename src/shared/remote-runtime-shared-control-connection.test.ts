@@ -671,6 +671,30 @@ describe('RemoteRuntimeSharedControlConnection', () => {
     })
   })
 
+  it('retires a live socket on the liveness cadence once its environment is removed', async () => {
+    const server = await createServer()
+    let environmentRemoved = false
+    let connection: RemoteRuntimeSharedControlConnection | null = null
+    const onEnvironmentRemoved = vi.fn(() => connection?.close())
+    connection = new RemoteRuntimeSharedControlConnection(server.pairing, {
+      liveness: { pingIntervalMs: 20, livenessTimeoutMs: 10_000 },
+      isEnvironmentRemoved: () => environmentRemoved,
+      onEnvironmentRemoved
+    })
+
+    await connection.request('worktree.ps', undefined, 1000)
+    expect(server.connectionCount()).toBe(1)
+
+    environmentRemoved = true
+    await vi.waitFor(() => expect(onEnvironmentRemoved).toHaveBeenCalled())
+
+    expect(connection.getDiagnostics()).toMatchObject({ state: 'closed' })
+    await new Promise((resolve) => setTimeout(resolve, 100))
+    expect(server.connectionCount()).toBe(1)
+    // Why: closing the socket must stop its liveness timer, or retirement repeats forever.
+    expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1)
+  })
+
   it('rejects pending requests and schedules standing recovery when the socket closes', async () => {
     const server = await createServer({ closeBeforeResponse: true })
     const connection = new RemoteRuntimeSharedControlConnection(server.pairing)

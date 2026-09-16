@@ -55,6 +55,7 @@ export class SharedControlReconnectScheduler {
   scheduleAfterSocketClose(args: {
     intentionallyClosed: boolean
     manuallyDisconnected: boolean
+    environmentRemoved: boolean
     capabilityPaused: boolean
     subscriptionCount: number
     open: () => void
@@ -62,6 +63,7 @@ export class SharedControlReconnectScheduler {
     if (
       args.intentionallyClosed ||
       args.manuallyDisconnected ||
+      args.environmentRemoved ||
       (args.subscriptionCount === 0 && args.capabilityPaused)
     ) {
       return

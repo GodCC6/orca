@@ -17,6 +17,11 @@ import type {
 } from '../../shared/remote-runtime-shared-control-types'
 import { isRuntimeEnvironmentCapabilityPaused } from './runtime-environment-capability-evidence'
 import { isRuntimeEnvironmentManuallyDisconnected } from './runtime-environment-manual-disconnect'
+import {
+  isRuntimeEnvironmentRemoved,
+  noteRuntimeEnvironmentStored,
+  retireRemovedRuntimeEnvironment
+} from './runtime-environment-removal-watch'
 import { publishRuntimeEnvironmentDiagnostics } from './runtime-environment-diagnostics-broadcast'
 import {
   advanceRuntimeEnvironmentTransportGeneration,
@@ -206,6 +211,9 @@ function getSharedControlConnection(
   let cached = sharedControlConnections.get(environmentId)
   if (!cached || cached.pairingKey !== pairingKey) {
     advanceRuntimeEnvironmentTransportGeneration(environmentId)
+    // Why: the caller just resolved this environment, so record it before removal can race the
+    // first liveness tick -- otherwise its later absence would never count as evidence.
+    noteRuntimeEnvironmentStored(environmentId)
     cached?.connection.close()
     const transportGeneration = getRuntimeEnvironmentTransportGeneration(environmentId)
     cached = {
@@ -215,6 +223,8 @@ function getSharedControlConnection(
         clientCapabilities: ELECTRON_REMOTE_RUNTIME_CLIENT_CAPABILITIES,
         isManuallyDisconnected: () => isRuntimeEnvironmentManuallyDisconnected(environmentId),
         isCapabilityPaused: () => isRuntimeEnvironmentCapabilityPaused(environmentId),
+        isEnvironmentRemoved: () => isRuntimeEnvironmentRemoved(environmentId),
+        onEnvironmentRemoved: () => retireRemovedRuntimeEnvironment(environmentId),
         onDiagnosticsChanged: (diagnostics) => {
           if (getRuntimeEnvironmentTransportGeneration(environmentId) !== transportGeneration) {
             return

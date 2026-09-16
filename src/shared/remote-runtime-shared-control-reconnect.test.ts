@@ -20,6 +20,44 @@ describe('SharedControlReconnectScheduler', () => {
     expect(open).toHaveBeenCalledTimes(1)
   })
 
+  it('stops reconnecting once the environment is gone from the store', () => {
+    vi.useFakeTimers()
+    const scheduler = new SharedControlReconnectScheduler()
+    const open = vi.fn()
+
+    scheduler.scheduleAfterSocketClose({
+      intentionallyClosed: false,
+      manuallyDisconnected: false,
+      environmentRemoved: true,
+      capabilityPaused: false,
+      subscriptionCount: 1,
+      open
+    })
+
+    expect(scheduler.isScheduled).toBe(false)
+    vi.advanceTimersByTime(300_000)
+    expect(open).not.toHaveBeenCalled()
+  })
+
+  it('keeps reconnecting a subscribed socket while the environment is still stored', () => {
+    vi.useFakeTimers()
+    const scheduler = new SharedControlReconnectScheduler()
+    const open = vi.fn()
+
+    scheduler.scheduleAfterSocketClose({
+      intentionallyClosed: false,
+      manuallyDisconnected: false,
+      environmentRemoved: false,
+      capabilityPaused: false,
+      subscriptionCount: 1,
+      open
+    })
+
+    expect(scheduler.isScheduled).toBe(true)
+    vi.advanceTimersByTime(300_000)
+    expect(open).toHaveBeenCalledTimes(1)
+  })
+
   it('does not advance cleared or intentionally closed work', () => {
     vi.useFakeTimers()
     const scheduler = new SharedControlReconnectScheduler()
