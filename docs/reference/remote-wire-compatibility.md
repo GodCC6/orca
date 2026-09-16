@@ -75,6 +75,28 @@ Treat these as wire changes even though nothing in the codec moves:
 If old clients cannot interpret the new projection correctly, gate it behind a
 runtime capability the same way Rule 2 gates an opcode.
 
+## Rule 4 — an enum arm set is a wire surface; unknown arms must degrade, never reject
+
+A closed `z.enum` in a client-side reply schema is a version claim: it asserts the host
+will never send an arm this build has not heard of. A newer host that adds one arm then
+has its whole reply refused, or has the row carrying it silently dropped, even though
+every member the client actually reads is present and well-formed.
+
+Declare the arm set open instead, with `openEnum` in `src/shared/zod-salvage.ts`:
+
+```ts
+// unknown arm degrades to a member the reader already handles; a non-string stays fatal
+status: openEnum(GIT_BRANCH_COMPARE_STATUS, 'error')
+```
+
+Do not reach for `.catch()`. It swallows absence and the wrong type as well, which turns
+a member the reader depends on into a silent default.
+
+Leaving a set closed is a decision to state, not a default. State it where the schema is
+declared, and say what the client does with an arm it refuses — `git.status`'s `area` is
+the worked example: every arm grants an affordance, so an unknown area drops the row
+rather than being coerced into offering one.
+
 ## Enforcement
 
 `tests/e2e/cross-version-wire/cross-version-terminal-wire.unit.test.ts` runs the real

@@ -457,10 +457,14 @@ a tree that does not produce them, which is the one claim this header exists to 
    `baseline` header of every golden, so every file moves and a partial refresh would leave the
    corpus pinned to two different trees.
 4. Prove the delta by decoding the value pool of every golden against the branch point and sorting
-   the files into four classes: header-only with `baseline` the only moved key, body moved, added,
-   deleted. The disclosed behaviour change is exactly the body-moved set; anything else in the last
-   three classes is an unintended move to explain before committing. `scenarioSha256` hashes the
-   derived scenarios, not the manifest, so a repin alone moves no other header key.
+   the files into four classes: header-only, body moved, added, deleted. The disclosed behaviour
+   change is exactly the body-moved set; anything else in the last three classes is an unintended
+   move to explain before committing. Know which header keys your own branch moves before you
+   read the header-only class, or you will not recognise a clean result: the repin moves
+   `baseline` on every golden, a branch that edited anything under `RECORDER_DIRECTORY` also moves
+   `recorderSha256` on every golden, and a branch that edited one adapter module moves that
+   family's `adapterSha256`. Any key outside that set is the finding. `scenarioSha256` hashes the
+   derived scenarios rather than the manifest, so a repin alone never moves it.
 5. Commit the repin and the refresh together, and state the cause.
 
 After a squash-merge the pinned sha is unreachable from main, so the next recording on main repins
