@@ -657,33 +657,6 @@
         }
       }
     },
-    "5a0d2dca259b": {
-      "outcome": {
-        "committed": true,
-        "error": "Orca could not confirm whether this branch already has a pull request. Try again in a moment.",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "5b46f52533a0": {
       "name": "hostedReview.create#1",
       "args": [
@@ -1223,36 +1196,6 @@
       "name": "progress",
       "value": "creating_review",
       "sent": 10
-    },
-    "bf0e050653a2": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": "Orca could not confirm whether this branch already has a pull request. Try again in a moment.",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
     },
     "c444aeacec59": {
       "name": "git.status#3",
@@ -1854,9 +1797,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },
@@ -1888,9 +1831,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },
@@ -1922,9 +1865,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },
@@ -1956,9 +1899,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },
@@ -1990,9 +1933,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },
@@ -2024,9 +1967,9 @@
             "eab004af0939"
           ],
           "settlements": {
-            "run": "bf0e050653a2"
+            "run": "3baf33626add"
           },
-          "state": "5a0d2dca259b",
+          "state": "6bdfb4167cc6",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8", "0d7681dfb908"]
         }
       },

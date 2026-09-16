@@ -823,36 +823,6 @@
       "name": "git.status#2",
       "json": "{\"id\":\"frame-3\",\"deviceToken\":\"recording-device\",\"method\":\"git.status\",\"params\":{\"worktree\":\"id:repo42::/p\"}}"
     },
-    "83e80c98d259": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": "Orca could not confirm whether this branch already has a pull request. Try again in a moment.",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 1,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "8b784bb9dff5": {
       "status": "fulfilled",
       "startedAt": 0,
@@ -1284,33 +1254,6 @@
     "c997e6a2a82a": {
       "name": "hostedReview.getCreationEligibility#1",
       "json": "{\"id\":\"frame-7\",\"deviceToken\":\"recording-device\",\"method\":\"hostedReview.getCreationEligibility\",\"params\":{\"repo\":\"id:repo42\",\"worktree\":\"id:repo42::/p\",\"branch\":\"feature\",\"base\":null,\"hasUncommittedChanges\":false,\"hasUpstream\":true,\"ahead\":1,\"behind\":0,\"linkedGitHubPR\":null,\"linkedGitLabMR\":null}}"
-    },
-    "dd5d9b4070b7": {
-      "outcome": {
-        "committed": true,
-        "error": "Orca could not confirm whether this branch already has a pull request. Try again in a moment.",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 1,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
     },
     "de647ad73f93": {
       "name": "hostedReview.getCreationEligibility#1",
@@ -1880,9 +1823,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -1908,9 +1851,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -1936,9 +1879,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -1964,9 +1907,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -1992,9 +1935,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -2020,9 +1963,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -2048,9 +1991,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -2076,9 +2019,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },
@@ -2104,9 +2047,9 @@
             "c997e6a2a82a"
           ],
           "settlements": {
-            "run": "83e80c98d259"
+            "run": "e6f94c399ee4"
           },
-          "state": "dd5d9b4070b7",
+          "state": "1bfbb544c337",
           "effects": ["3a3a688f828b", "0b80f2766914", "7349acf3d5b8"]
         }
       },

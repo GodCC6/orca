@@ -224,12 +224,14 @@
       },
       "prefill": "unresolved"
     },
-    "301151228fa3": {
-      "status": "fulfilled",
+    "3ae28402dc87": {
+      "status": "rejected",
       "startedAt": 0,
       "settledAt": 0,
-      "value": {
-        "error": "refused"
+      "error": {
+        "category": "RpcIncompatibleReplyError",
+        "message": "incompatible_reply: hostedReview.creation-eligibility-or-skip (hostedReview.getCreationEligibility)",
+        "isRpcDeliveryUnknown": false
       }
     },
     "485a0942bda3": {
@@ -239,13 +241,6 @@
     "4dfe4f2ad75c": {
       "eligibility": {
         "$rpc": "null"
-      },
-      "prefill": "unresolved"
-    },
-    "5f12cd4867ce": {
-      "eligibility": {
-        "error": "inner refused",
-        "ok": false
       },
       "prefill": "unresolved"
     },
@@ -381,12 +376,6 @@
         }
       }
     },
-    "7bf63f31c702": {
-      "eligibility": {
-        "$rpc": "undefined"
-      },
-      "prefill": "unresolved"
-    },
     "7fb1231fd64d": {
       "name": "hostedReview.getCreationEligibility#1",
       "args": [
@@ -428,15 +417,6 @@
           "isRpcDeliveryUnknown": true
         }
       }
-    },
-    "87a2ebdbec89": {
-      "eligibility": {
-        "error": {
-          "message": "inner refused"
-        },
-        "ok": false
-      },
-      "prefill": "unresolved"
     },
     "899a024357b9": {
       "name": "hostedReview.getCreationEligibility#1",
@@ -541,15 +521,6 @@
       "status": "pending",
       "startedAt": 0
     },
-    "9f00dd54ba64": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "error": "inner refused",
-        "ok": false
-      }
-    },
     "a947768bc0ed": {
       "status": "rejected",
       "startedAt": 0,
@@ -559,23 +530,6 @@
         "message": "transport failure",
         "isRpcDeliveryUnknown": true
       }
-    },
-    "ad8a954e879d": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "error": {
-          "message": "inner refused"
-        },
-        "ok": false
-      }
-    },
-    "b925156655c6": {
-      "eligibility": {
-        "error": "refused"
-      },
-      "prefill": "unresolved"
     },
     "c7584e82c72f": {
       "status": "rejected",
@@ -625,14 +579,6 @@
       "settlement": {
         "status": "pending",
         "startedAt": 0
-      }
-    },
-    "eb79a9b3682a": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "$rpc": "undefined"
       }
     },
     "ee20a1dc39e7": {
@@ -724,9 +670,9 @@
           "sender": ["099a55e691ed"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "eb79a9b3682a"
+            "fetch": "3ae28402dc87"
           },
-          "state": "7bf63f31c702",
+          "state": "485a0942bda3",
           "effects": []
         }
       },
@@ -736,9 +682,9 @@
           "sender": ["1c4e890f9aaf"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "ee20a1dc39e7"
+            "fetch": "3ae28402dc87"
           },
-          "state": "4dfe4f2ad75c",
+          "state": "485a0942bda3",
           "effects": []
         }
       },
@@ -748,9 +694,9 @@
           "sender": ["8cef4aaa067c"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "301151228fa3"
+            "fetch": "3ae28402dc87"
           },
-          "state": "b925156655c6",
+          "state": "485a0942bda3",
           "effects": []
         }
       },
@@ -760,9 +706,9 @@
           "sender": ["6c52d90237b7"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "9f00dd54ba64"
+            "fetch": "3ae28402dc87"
           },
-          "state": "5f12cd4867ce",
+          "state": "485a0942bda3",
           "effects": []
         }
       },
@@ -772,9 +718,9 @@
           "sender": ["fed21873c57f"],
           "payloads": ["cc09b6142ccb"],
           "settlements": {
-            "fetch": "ad8a954e879d"
+            "fetch": "3ae28402dc87"
           },
-          "state": "87a2ebdbec89",
+          "state": "485a0942bda3",
           "effects": []
         }
       },

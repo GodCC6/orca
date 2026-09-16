@@ -13,16 +13,6 @@
   "projectionVersion": 2,
   "goldenFormatVersion": 5,
   "values": {
-    "155f61ed496f": {
-      "status": "rejected",
-      "startedAt": 0,
-      "settledAt": 0,
-      "error": {
-        "category": "TypeError",
-        "message": "Cannot read properties of null (reading 'items')",
-        "isRpcDeliveryUnknown": false
-      }
-    },
     "17bc1e177fe1": {
       "name": "git.history#1",
       "args": [
@@ -290,16 +280,6 @@
       "status": "pending",
       "startedAt": 0
     },
-    "93e7019b0698": {
-      "status": "rejected",
-      "startedAt": 0,
-      "settledAt": 0,
-      "error": {
-        "category": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'map')",
-        "isRpcDeliveryUnknown": false
-      }
-    },
     "a947768bc0ed": {
       "status": "rejected",
       "startedAt": 0,
@@ -558,13 +538,13 @@
     "ef169a494b41": {
       "rows": "unloaded"
     },
-    "f51f34589c7a": {
+    "f97f98d47494": {
       "status": "rejected",
       "startedAt": 0,
       "settledAt": 0,
       "error": {
-        "category": "TypeError",
-        "message": "Cannot read properties of undefined (reading 'items')",
+        "category": "Error",
+        "message": "incompatible_reply: git.history-page (git.history)",
         "isRpcDeliveryUnknown": false
       }
     }
@@ -602,7 +582,7 @@
           "sender": ["8bf6ec174c09"],
           "payloads": ["d2ac5468a6f5"],
           "settlements": {
-            "load": "f51f34589c7a"
+            "load": "f97f98d47494"
           },
           "state": "ef169a494b41",
           "effects": []
@@ -614,7 +594,7 @@
           "sender": ["dfb377a66ab7"],
           "payloads": ["d2ac5468a6f5"],
           "settlements": {
-            "load": "155f61ed496f"
+            "load": "f97f98d47494"
           },
           "state": "ef169a494b41",
           "effects": []
@@ -626,7 +606,7 @@
           "sender": ["52b4fb4742f7"],
           "payloads": ["d2ac5468a6f5"],
           "settlements": {
-            "load": "93e7019b0698"
+            "load": "f97f98d47494"
           },
           "state": "ef169a494b41",
           "effects": []
@@ -638,7 +618,7 @@
           "sender": ["ba8b415f2807"],
           "payloads": ["d2ac5468a6f5"],
           "settlements": {
-            "load": "93e7019b0698"
+            "load": "f97f98d47494"
           },
           "state": "ef169a494b41",
           "effects": []
@@ -650,7 +630,7 @@
           "sender": ["acda0899d438"],
           "payloads": ["d2ac5468a6f5"],
           "settlements": {
-            "load": "93e7019b0698"
+            "load": "f97f98d47494"
           },
           "state": "ef169a494b41",
           "effects": []

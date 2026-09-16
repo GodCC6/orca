@@ -13,33 +13,6 @@
   "projectionVersion": 2,
   "goldenFormatVersion": 5,
   "values": {
-    "000efa3053f3": {
-      "outcome": {
-        "committed": true,
-        "error": "Cannot read properties of null (reading 'ok')",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "0215b92c4449": {
       "outcome": {
         "committed": true,
@@ -504,38 +477,6 @@
         }
       }
     },
-    "4a4639fa3798": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": {
-          "message": "inner refused"
-        },
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "4b12390e509a": {
       "name": "hostedReview.create#1",
       "args": [
@@ -657,6 +598,33 @@
       "name": "git.status#1",
       "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"git.status\",\"params\":{\"worktree\":\"id:repo42::/p\"}}"
     },
+    "620ca79ead87": {
+      "outcome": {
+        "committed": true,
+        "error": "incompatible_reply: hostedReview.create (hostedReview.create)",
+        "ok": false,
+        "status": {
+          "branch": "feature",
+          "conflictOperation": "unknown",
+          "entries": [],
+          "head": "def5678",
+          "upstreamStatus": {
+            "ahead": 0,
+            "behind": 0,
+            "behindCommitsArePatchEquivalent": {
+              "$rpc": "undefined"
+            },
+            "hasConfiguredPushTarget": {
+              "$rpc": "undefined"
+            },
+            "hasUpstream": true,
+            "upstreamName": {
+              "$rpc": "undefined"
+            }
+          }
+        }
+      }
+    },
     "658bb4ca2398": {
       "status": "fulfilled",
       "startedAt": 0,
@@ -725,33 +693,6 @@
           },
           "id": "frame-11",
           "ok": false
-        }
-      }
-    },
-    "6d9570b41a8b": {
-      "outcome": {
-        "committed": true,
-        "error": "Cannot read properties of undefined (reading 'ok')",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
         }
       }
     },
@@ -1371,13 +1312,13 @@
         }
       }
     },
-    "b2814f99b696": {
+    "b0c6e557c96f": {
       "status": "fulfilled",
       "startedAt": 0,
       "settledAt": 0,
       "value": {
         "committed": true,
-        "error": "refused",
+        "error": "incompatible_reply: hostedReview.create (hostedReview.create)",
         "ok": false,
         "status": {
           "branch": "feature",
@@ -1510,35 +1451,6 @@
       "value": {
         "committed": true,
         "error": "inner refused",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
-    "c955a0980eb4": {
-      "outcome": {
-        "committed": true,
-        "error": {
-          "message": "inner refused"
-        },
         "ok": false,
         "status": {
           "branch": "feature",
@@ -1744,33 +1656,6 @@
         "startedAt": 0
       }
     },
-    "e19dc901cb36": {
-      "outcome": {
-        "committed": true,
-        "error": "refused",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
     "e6d858bcb05d": {
       "outcome": {
         "committed": true,
@@ -1801,66 +1686,6 @@
     "eab004af0939": {
       "name": "hostedReview.getCreationEligibility#2",
       "json": "{\"id\":\"frame-10\",\"deviceToken\":\"recording-device\",\"method\":\"hostedReview.getCreationEligibility\",\"params\":{\"repo\":\"id:repo42\",\"worktree\":\"id:repo42::/p\",\"branch\":\"feature\",\"base\":null,\"hasUncommittedChanges\":false,\"hasUpstream\":true,\"ahead\":0,\"behind\":0,\"linkedGitHubPR\":null,\"linkedGitLabMR\":null}}"
-    },
-    "f2d31538d6f8": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": "Cannot read properties of undefined (reading 'ok')",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
-    },
-    "f7a1885f58b2": {
-      "status": "fulfilled",
-      "startedAt": 0,
-      "settledAt": 0,
-      "value": {
-        "committed": true,
-        "error": "Cannot read properties of null (reading 'ok')",
-        "ok": false,
-        "status": {
-          "branch": "feature",
-          "conflictOperation": "unknown",
-          "entries": [],
-          "head": "def5678",
-          "upstreamStatus": {
-            "ahead": 0,
-            "behind": 0,
-            "behindCommitsArePatchEquivalent": {
-              "$rpc": "undefined"
-            },
-            "hasConfiguredPushTarget": {
-              "$rpc": "undefined"
-            },
-            "hasUpstream": true,
-            "upstreamName": {
-              "$rpc": "undefined"
-            }
-          }
-        }
-      }
     }
   },
   "recording": {
@@ -2100,9 +1925,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "f2d31538d6f8"
+            "run": "b0c6e557c96f"
           },
-          "state": "6d9570b41a8b",
+          "state": "620ca79ead87",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -2142,9 +1967,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "f7a1885f58b2"
+            "run": "b0c6e557c96f"
           },
-          "state": "000efa3053f3",
+          "state": "620ca79ead87",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -2184,9 +2009,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "b2814f99b696"
+            "run": "b0c6e557c96f"
           },
-          "state": "e19dc901cb36",
+          "state": "620ca79ead87",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
@@ -2268,9 +2093,9 @@
             "0a191e58baef"
           ],
           "settlements": {
-            "run": "4a4639fa3798"
+            "run": "b0c6e557c96f"
           },
-          "state": "c955a0980eb4",
+          "state": "620ca79ead87",
           "effects": [
             "3a3a688f828b",
             "0b80f2766914",
