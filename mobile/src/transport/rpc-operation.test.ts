@@ -330,12 +330,13 @@ describe('an incompatible reply', () => {
       {}
     ).catch((thrown: unknown) => thrown)
 
-    expect((caught as Error).message).toBe(
-      'The host sent a reply this app could not read (worktree.ps)'
-    )
-    expect((caught as Error).message).not.toContain('incompatible_reply')
-    expect((caught as RpcIncompatibleReplyError).code).toBe(RPC_INCOMPATIBLE_REPLY_CODE)
-    expect((caught as Error).name).toBe('RpcIncompatibleReplyError')
+    if (!(caught instanceof RpcIncompatibleReplyError)) {
+      throw new Error('expected an incompatible-reply error')
+    }
+    expect(caught.message).toBe('The host sent a reply this app could not read (worktree.ps)')
+    expect(caught.message).not.toContain('incompatible_reply')
+    expect(caught.code).toBe(RPC_INCOMPATIBLE_REPLY_CODE)
+    expect(caught.name).toBe('RpcIncompatibleReplyError')
   })
 
   // A second bundle copy of this module fails `instanceof`, so the name is the fallback.
