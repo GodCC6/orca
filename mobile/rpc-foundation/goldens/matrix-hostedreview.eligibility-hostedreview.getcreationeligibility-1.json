@@ -3,9 +3,9 @@
   "family": "hostedReview.eligibility",
   "namedDeltas": [],
   "runnerVersion": 1,
-  "baseline": "71d8c6a1e2eaad5fe3578c114613b8fabcbcf690",
+  "baseline": "2648e87dbab03548bc4fe595d72cb5ef2e9da86a",
   "lockfileSha256": "788c1234b38a61fc882fca292341fce6690deee9cc6695673b0575cf2c4cf571",
-  "recorderSha256": "aa6c1c60aeed037f13811723eca5ab4888281ac81efd78fa24e10bdab2bff996",
+  "recorderSha256": "304a269393e810cb122681fae74d2309e64538a264e6f21f074f1fbeb19d2832",
   "adapterSha256": "c582ce355b0704b38d7e84cbce352630096c91231bf09aecd1f6dbb409fed17f",
   "scenarioSha256": "6c4de90e2617d204e82ca5e65eb17fc397acbcbb9dc0ec18594d2a7739e3528b",
   "platform": "darwin",
@@ -234,6 +234,11 @@
         "title": "Host title"
       },
       "prefill": "unresolved"
+    },
+    "349d5045a996": {
+      "name": "hostedReview.getCreationEligibility#1",
+      "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"hostedReview.getCreationEligibility\",\"params\":{\"repo\":\"id:repo42\",\"worktree\":\"id:repo42::/p\",\"branch\":\"feature\",\"base\":null,\"linkedGitHubPR\":null,\"linkedGitLabMR\":null}}",
+      "sent": 1
     },
     "485a0942bda3": {
       "eligibility": "unfetched",
@@ -542,10 +547,6 @@
         "isRpcDeliveryUnknown": true
       }
     },
-    "cc09b6142ccb": {
-      "name": "hostedReview.getCreationEligibility#1",
-      "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"hostedReview.getCreationEligibility\",\"params\":{\"repo\":\"id:repo42\",\"worktree\":\"id:repo42::/p\",\"branch\":\"feature\",\"base\":null,\"linkedGitHubPR\":null,\"linkedGitLabMR\":null}}"
-    },
     "e41e491351c2": {
       "name": "hostedReview.getCreationEligibility#1",
       "args": [
@@ -645,7 +646,7 @@
         "id": "sc-eligibility-fetched.prelude:pending",
         "observation": {
           "sender": ["e41e491351c2"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "9270aeb7d9c6"
           },
@@ -657,7 +658,7 @@
         "id": "sc-eligibility-fetched.normal:settled",
         "observation": {
           "sender": ["899a024357b9"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "24bd84c9fb40"
           },
@@ -669,7 +670,7 @@
         "id": "sc-eligibility-fetched.result-absent:settled",
         "observation": {
           "sender": ["099a55e691ed"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "067b33e5b1a9"
           },
@@ -681,7 +682,7 @@
         "id": "sc-eligibility-fetched.result-null:settled",
         "observation": {
           "sender": ["1c4e890f9aaf"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "067b33e5b1a9"
           },
@@ -693,7 +694,7 @@
         "id": "sc-eligibility-fetched.inner-ok-missing:settled",
         "observation": {
           "sender": ["8cef4aaa067c"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "067b33e5b1a9"
           },
@@ -705,7 +706,7 @@
         "id": "sc-eligibility-fetched.inner-false-string-error:settled",
         "observation": {
           "sender": ["6c52d90237b7"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "067b33e5b1a9"
           },
@@ -717,7 +718,7 @@
         "id": "sc-eligibility-fetched.inner-false-object-error:settled",
         "observation": {
           "sender": ["fed21873c57f"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "067b33e5b1a9"
           },
@@ -729,7 +730,7 @@
         "id": "sc-eligibility-fetched.outer-refused:settled",
         "observation": {
           "sender": ["6506a6ec7ac3"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "ee20a1dc39e7"
           },
@@ -741,7 +742,7 @@
         "id": "sc-eligibility-fetched.outer-refused-no-message:settled",
         "observation": {
           "sender": ["291496f6f93a"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "ee20a1dc39e7"
           },
@@ -753,7 +754,7 @@
         "id": "sc-eligibility-fetched.method-not-found:settled",
         "observation": {
           "sender": ["198e064322d5"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "ee20a1dc39e7"
           },
@@ -765,7 +766,7 @@
         "id": "sc-eligibility-fetched.transport-rejection:settled",
         "observation": {
           "sender": ["7fb1231fd64d"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "a947768bc0ed"
           },
@@ -777,7 +778,7 @@
         "id": "sc-eligibility-fetched.transport-rejection-no-message:settled",
         "observation": {
           "sender": ["79c3a2ea5c23"],
-          "payloads": ["cc09b6142ccb"],
+          "payloads": ["349d5045a996"],
           "settlements": {
             "fetch": "c7584e82c72f"
           },

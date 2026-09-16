@@ -3,9 +3,9 @@
   "family": "git.branch-diff-preview",
   "namedDeltas": [],
   "runnerVersion": 1,
-  "baseline": "71d8c6a1e2eaad5fe3578c114613b8fabcbcf690",
+  "baseline": "2648e87dbab03548bc4fe595d72cb5ef2e9da86a",
   "lockfileSha256": "788c1234b38a61fc882fca292341fce6690deee9cc6695673b0575cf2c4cf571",
-  "recorderSha256": "aa6c1c60aeed037f13811723eca5ab4888281ac81efd78fa24e10bdab2bff996",
+  "recorderSha256": "304a269393e810cb122681fae74d2309e64538a264e6f21f074f1fbeb19d2832",
   "adapterSha256": "57147be5ea5d7c74e8fd0d2473c7001dd91008cf53128d5e60fd6d3d607183e6",
   "scenarioSha256": "819d010b9a8bb2741b09f104415f648e0e65d797882a2152ccfa4fb8a107cafc",
   "platform": "darwin",
@@ -98,9 +98,10 @@
       "status": "pending",
       "startedAt": 0
     },
-    "a7cd4a8eb6ec": {
+    "a13b63650ed2": {
       "name": "git.branchDiff#1",
-      "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"git.branchDiff\",\"params\":{\"worktree\":\"id:repo42::/p\",\"filePath\":\"src/app.ts\",\"compare\":{\"baseRef\":\"origin/main\",\"baseOid\":\"base-oid\",\"headOid\":\"head-oid\",\"mergeBase\":\"merge-base\"}}}"
+      "json": "{\"id\":\"frame-1\",\"deviceToken\":\"recording-device\",\"method\":\"git.branchDiff\",\"params\":{\"worktree\":\"id:repo42::/p\",\"filePath\":\"src/app.ts\",\"compare\":{\"baseRef\":\"origin/main\",\"baseOid\":\"base-oid\",\"headOid\":\"head-oid\",\"mergeBase\":\"merge-base\"}}}",
+      "sent": 1
     },
     "e5400edc0fdd": {
       "preview": {
@@ -123,7 +124,7 @@
         "id": "diff-pending",
         "observation": {
           "sender": ["91c37bcd04c9"],
-          "payloads": ["a7cd4a8eb6ec"],
+          "payloads": ["a13b63650ed2"],
           "settlements": {
             "mount": "eb79a9b3682a",
             "open": "9270aeb7d9c6"
@@ -136,7 +137,7 @@
         "id": "settled",
         "observation": {
           "sender": ["2465956f5415"],
-          "payloads": ["a7cd4a8eb6ec"],
+          "payloads": ["a13b63650ed2"],
           "settlements": {
             "mount": "eb79a9b3682a",
             "open": "eb79a9b3682a"

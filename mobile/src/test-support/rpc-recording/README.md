@@ -451,7 +451,8 @@ a tree that does not produce them, which is the one claim this header exists to 
    `mobile/pnpm-lock.yaml`) is final and committed.
 2. Repin `baseline` in `pilot-scenarios.json` to that commit on your own branch. Nothing else: not
    main, not a tree you have not committed. The manifest is outside the fenced paths, so the repin
-   may sit uncommitted while you record.
+   may sit uncommitted while you record. After merging main the pin is the merge commit, since that
+   is the last commit to touch a fenced path and the only tree the fence can match.
 3. Re-record everything, not a subset: `RPC_FOUNDATION_RECORD=1 pnpm --dir mobile exec tsx
    scripts/rpc-recording.mts --record`. The repin rewrites the `baseline` header of every golden,
    so every file moves and a partial refresh would leave the corpus pinned to two different trees.
