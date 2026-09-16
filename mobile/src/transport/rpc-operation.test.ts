@@ -7,6 +7,7 @@ import {
 } from './stable-logical-rpc-client'
 import { isRpcDeliveryUnknown, markRpcDeliveryUnknown } from './rpc-delivery-ambiguity'
 import {
+  RPC_INCOMPATIBLE_REPLY_CODE,
   RpcIncompatibleReplyError,
   isRpcIncompatibleReplyError
 } from './rpc-incompatible-reply-error'
@@ -319,6 +320,33 @@ describe('an incompatible reply', () => {
     await expect(
       runRpcOperation(connectedSession(incompatible), workspaceListOrNull, {})
     ).resolves.toBeNull()
+  })
+
+  // `message` reaches toasts and screen copy, so the machine token lives on `code`/`name` instead.
+  it('carries readable copy in the message and the token on code and name', async () => {
+    const caught = await runRpcOperation(
+      connectedSession(incompatible),
+      workspaceListOrThrow,
+      {}
+    ).catch((thrown: unknown) => thrown)
+
+    expect((caught as Error).message).toBe(
+      'The host sent a reply this app could not read (worktree.ps)'
+    )
+    expect((caught as Error).message).not.toContain('incompatible_reply')
+    expect((caught as RpcIncompatibleReplyError).code).toBe(RPC_INCOMPATIBLE_REPLY_CODE)
+    expect((caught as Error).name).toBe('RpcIncompatibleReplyError')
+  })
+
+  // A second bundle copy of this module fails `instanceof`, so the name is the fallback.
+  it('recognizes a foreign copy of the error by name', () => {
+    const foreign = Object.assign(new Error('anything at all'), {
+      name: 'RpcIncompatibleReplyError'
+    })
+
+    expect(foreign instanceof RpcIncompatibleReplyError).toBe(false)
+    expect(isRpcIncompatibleReplyError(foreign)).toBe(true)
+    expect(isRpcIncompatibleReplyError(new Error('incompatible_reply: x (y)'))).toBe(false)
   })
 })
 
