@@ -80,7 +80,8 @@ export function useMobileSourceControlOpeners(params: Params) {
     async (entry: MobileGitStatusEntry) => {
       // Deletions are openable (pre-delete text/image via git.diff); only block
       // unresolved conflicts, matching canOpenMobileGitStatusEntry / row UI.
-      if (!canOpenMobileGitStatusEntry(entry)) {
+      // An entry with no area is in no section, so no row can reach this anyway.
+      if (!canOpenMobileGitStatusEntry(entry) || entry.area === undefined) {
         return
       }
       if (openingPathRef.current || busyActionRef.current) {

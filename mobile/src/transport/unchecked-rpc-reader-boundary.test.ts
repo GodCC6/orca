@@ -42,10 +42,9 @@ const UNCHECKED_READER_NAMES = new Set([
   'rpcUncheckedMemberReader',
   'rpcReadUnchecked'
 ])
-const SELF_FILES = new Set([
-  'src/transport/rpc-reader-payload.ts',
-  'src/transport/unchecked-rpc-reader-inventory.ts'
-])
+// Only the module that defines the readers: the AST counter counts calls, and the inventory names
+// them in prose alone.
+const SELF_FILES = new Set(['src/transport/rpc-reader-payload.ts'])
 
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -69,7 +68,7 @@ function parse(path: string, source: string): ts.SourceFile {
 }
 
 /** How many unchecked readers this file builds. Only a call counts: an import is not a reader. */
-export function uncheckedReaderCount(path: string, source: string): number {
+function uncheckedReaderCount(path: string, source: string): number {
   let readers = 0
   const visit = (node: ts.Node): void => {
     if (

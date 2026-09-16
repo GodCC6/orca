@@ -92,10 +92,15 @@ status: openEnum(GIT_BRANCH_COMPARE_STATUS, 'error')
 Do not reach for `.catch()`. It swallows absence and the wrong type as well, which turns
 a member the reader depends on into a silent default.
 
-Leaving a set closed is a decision to state, not a default. State it where the schema is
-declared, and say what the client does with an arm it refuses — `git.status`'s `area` is
-the worked example: every arm grants an affordance, so an unknown area drops the row
-rather than being coerced into offering one.
+A fallback does not have to be an arm. `git.status`'s `area` is the worked example:
+`staged`, `unstaged` and `untracked` each grant an affordance, so coercing an unknown area
+to one of them offers stage, unstage or commit against a row the client cannot place. It
+degrades to absent instead, which withholds all three — every reader is an equality check
+against a known arm, so the row lands in no section — while keeping the row itself. That
+last part is the point. Dropping the row would also drop it from the unresolved-conflict
+gate, and a conflicted worktree that looks clean is granted a hosted-review create it
+should not have. Withholding an affordance is a degrade; removing the evidence a gate
+reads is not.
 
 ## Enforcement
 

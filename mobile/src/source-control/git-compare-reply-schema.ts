@@ -61,12 +61,14 @@ const gitBranchCompareSummarySchema = z.looseObject({
 /**
  * `summary` is required: use-mobile-source-control-state.ts:131/134/149 and
  * MobileSourceControlFileRows.tsx:190 reach it with only the result null-checked. `entries` is
- * optional because :127 reads `branchCompareResult?.entries ?? []` — a reply without a list is an
- * empty section today, and making it fatal would turn that into a full-screen error.
+ * nullish because :127 reads `branchCompareResult?.entries ?? []` — a reply without a list is an
+ * empty section today, and making it fatal would turn that into a full-screen error. Nullish, not
+ * optional, so a host that sends an explicit `null` reaches that same `?? []` rather than failing
+ * the whole compare, the way `timestamp` does in git-history-reply-schema.ts.
  */
 export const gitBranchCompareResultSchema = z.looseObject({
   summary: gitBranchCompareSummarySchema,
-  entries: salvagingArray(gitBranchChangeEntrySchema).optional()
+  entries: salvagingArray(gitBranchChangeEntrySchema).nullish()
 })
 
 /** The commit-compare list. Only `entries` has a reader: MobileGitHistoryList.tsx:114-115. */

@@ -32,15 +32,16 @@ const GIT_CONFLICT_OPERATION = ['merge', 'rebase', 'cherry-pick', 'unknown'] as 
  * `entry.path`, and MOBILE_GIT_STATUS_LABELS is indexed by `entry.status`. The rest are optional in
  * the host type and read through a guard or a default, so they stay optional here.
  *
- * `area` is the one closed set left in this module. Every arm carries an affordance — stage,
- * unstage, commit — so coercing an unknown area to one of them would offer an action against a row
- * whose real area this build does not know. Main rendered such a row in no section and made it
- * neither stageable nor openable, so dropping it costs only its count in `hasUncommittedChanges`.
+ * `area` degrades to absent rather than to an arm. Every arm carries an affordance — stage,
+ * unstage, commit — and every reader is an equality check against a known one, so an absent area
+ * lands the row in no section and withholds all three, which is what main did with an area it did
+ * not know. Dropping the row instead would also drop it from the unresolved-conflict gate, which
+ * grants create on a conflicted worktree.
  */
 const gitStatusEntrySchema = z.looseObject({
   path: z.string(),
   status: openEnum(GIT_FILE_STATUS, 'modified'),
-  area: z.enum(GIT_STAGING_AREA),
+  area: openEnum(GIT_STAGING_AREA, undefined),
   oldPath: z.string().optional(),
   conflictKind: openEnum(GIT_CONFLICT_KIND, undefined).optional(),
   conflictStatus: openEnum(GIT_CONFLICT_STATUS, undefined).optional(),
@@ -82,7 +83,7 @@ type MobileProjectedUpstreamStatus = z.output<typeof projectedUpstreamStatusSche
 type GitConflictOperation = (typeof GIT_CONFLICT_OPERATION)[number]
 
 /** What readMobileGitStatusResult publishes: the host payload narrowed to five members. */
-export type MobileGitStatusProjection = {
+type MobileGitStatusProjection = {
   entries: MobileGitStatusEntry[]
   conflictOperation: GitConflictOperation
   branch: string | undefined
@@ -119,7 +120,7 @@ const projectedEntrySchema = z.object({
   // `.min(1)` because main's `!path` drop is falsy, not nullish: an empty path was never a row.
   path: z.string().min(1),
   status: openEnum(GIT_FILE_STATUS, 'modified'),
-  area: z.enum(GIT_STAGING_AREA),
+  area: openEnum(GIT_STAGING_AREA, undefined),
   oldPath: salvagedOptional('oldPath', z.string()),
   conflictStatus: salvagedOptional('conflictStatus', z.enum(GIT_CONFLICT_STATUS)),
   conflictStatusSource: salvagedOptional('conflictStatusSource', z.enum(GIT_CONFLICT_SOURCE)),

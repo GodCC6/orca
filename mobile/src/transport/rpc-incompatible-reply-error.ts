@@ -22,12 +22,3 @@ export class RpcIncompatibleReplyError extends Error {
     this.name = INCOMPATIBLE_REPLY_ERROR_NAME
   }
 }
-
-// Why: instanceof can miss across bundle copies, so also match the name a copy still carries,
-// mirroring isLogicalClientCutoverError.
-export function isRpcIncompatibleReplyError(error: unknown): boolean {
-  return (
-    error instanceof RpcIncompatibleReplyError ||
-    (error instanceof Error && error.name === INCOMPATIBLE_REPLY_ERROR_NAME)
-  )
-}

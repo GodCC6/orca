@@ -5,6 +5,12 @@ import {
   gitCommitCompareResultSchema
 } from './git-compare-reply-schema'
 import { gitHistoryResultSchema } from './git-history-reply-schema'
+import {
+  buildMobileSourceControlSections,
+  countStagedEntries,
+  countUnstagedEntries,
+  isMobileGitStageableEntry
+} from './mobile-git-status'
 import { gitStatusHostPayloadSchema, gitStatusProjectionSchema } from './git-status-reply-schema'
 import { hostedReviewEligibilitySchema } from './hosted-review-reply-schema'
 
@@ -171,13 +177,30 @@ describe('an enum arm this build does not know', () => {
     expect(hostedReviewEligibilitySchema.safeParse({ provider: 7 }).success).toBe(false)
   })
 
-  it('still drops a row whose staging area it does not know', () => {
-    // The one closed set left: every arm offers stage, unstage or commit, so an unknown area has
-    // no member to degrade to that would not offer an action against a row this build cannot place.
+  it('keeps a row whose staging area it does not know, in no section', () => {
+    // Absent, not an arm: every arm offers stage, unstage or commit against a row this build
+    // cannot place. Keeping the row is what leaves it visible to the unresolved-conflict gate.
     const parsed = gitStatusHostPayloadSchema.safeParse({
-      entries: [{ ...STATUS_ENTRY, area: 'stashed' }]
+      entries: [{ ...STATUS_ENTRY, area: 'stashed', conflictStatus: 'unresolved' }]
+    })
+    const entries = parsed.data?.entries ?? []
+    expect(entries).toHaveLength(1)
+    expect(entries[0]?.area).toBeUndefined()
+    expect(entries.some((entry) => entry.conflictStatus === 'unresolved')).toBe(true)
+    expect(buildMobileSourceControlSections(entries)).toHaveLength(0)
+    expect(isMobileGitStageableEntry(entries[0] ?? STATUS_ENTRY)).toBe(false)
+    expect(countStagedEntries(entries)).toBe(0)
+    expect(countUnstagedEntries(entries)).toBe(0)
+  })
+
+  it('reads an explicit null entries list as an empty compare', () => {
+    // The consumer guard is `branchCompareResult?.entries ?? []`, so a host that sends null must
+    // reach it rather than fail the whole compare — the `timestamp: null` precedent.
+    const parsed = gitBranchCompareResultSchema.safeParse({
+      summary: { baseRef: 'origin/main', changedFiles: 0, status: 'ready' },
+      entries: null
     })
     expect(parsed.success).toBe(true)
-    expect(parsed.data?.entries).toHaveLength(0)
+    expect(parsed.data?.entries ?? []).toEqual([])
   })
 })

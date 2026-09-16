@@ -103,10 +103,11 @@ export async function resolveMobileHostedReviewPrefill(
       behind: args.behind
     })
     if (!eligibility) {
-      // Eligibility itself could not be resolved: the review lookup is unproven.
+      // Eligibility itself could not be resolved: the review lookup is unproven. No `canCreate`,
+      // because a false one is a determination — it would route the copy through blockedReason and
+      // tell the user the branch is not ready, when what happened is that nobody could say.
       return {
         ...fallback,
-        canCreate: false,
         blockedReason: null,
         nextAction: null,
         reviewLookupOutcome: 'unavailable'
@@ -125,7 +126,6 @@ export async function resolveMobileHostedReviewPrefill(
   } catch {
     return {
       ...fallback,
-      canCreate: false,
       blockedReason: null,
       nextAction: null,
       reviewLookupOutcome: 'unavailable'
