@@ -1,17 +1,12 @@
-import type {
-  CreateHostedReviewResult,
-  HostedReviewCreationBlockedReason,
-  HostedReviewCreationEligibility,
-  HostedReviewCreationNextAction,
-  HostedReviewLookupOutcome,
-  HostedReviewProvider
-} from '../../../src/shared/hosted-review'
+import type { HostedReviewProvider } from '../../../src/shared/hosted-review'
+import type { MobileHostedReviewEligibilityReply } from './hosted-review-reply-schema'
 import type { RpcSendParams } from '../transport/rpc-params-contract'
 import { refusedRpcMessageOrFallback } from '../transport/rpc-refusal-message'
 import { hostedReviewCopy } from './hosted-review-copy'
 import {
   hostedReviewCreateRun,
-  hostedReviewEligibilityRead
+  hostedReviewEligibilityRead,
+  type MobileHostedReviewCreateReply
 } from './mobile-hosted-review-operations'
 import { pushMobileHostedReviewBranch } from './mobile-hosted-review-git-preparation'
 import { linkMobileHostedReview } from './mobile-pr-link'
@@ -40,7 +35,7 @@ export async function fetchMobileHostedReviewEligibility(
   client: RpcOperationSender,
   worktreeId: string,
   input: MobileHostedReviewEligibilityInput
-): Promise<HostedReviewCreationEligibility | null> {
+): Promise<MobileHostedReviewEligibilityReply | null> {
   const reply = await hostedReviewEligibilityRead.request(client, {
     repo: mobileRepoSelectorFromWorktreeId(worktreeId),
     worktree: `id:${worktreeId}`,
@@ -56,8 +51,7 @@ export async function fetchMobileHostedReviewEligibility(
     linkedGitLabMR: input.linkedGitLabMR ?? null
   })
   const eligibility = hostedReviewEligibilityRead.interpret(reply)
-  // oxlint-disable-next-line typescript/consistent-type-assertions -- SAFETY: Preserve the established response shape at this boundary.
-  return eligibility.accepted ? (eligibility.value as HostedReviewCreationEligibility) : null
+  return eligibility.accepted ? eligibility.value : null
 }
 
 export type MobileHostedReviewPrefill = {
@@ -66,12 +60,14 @@ export type MobileHostedReviewPrefill = {
   title: string
   body: string
   canCreate?: boolean
-  blockedReason?: HostedReviewCreationBlockedReason
-  nextAction?: HostedReviewCreationNextAction
+  // Strings, not the shared closed unions: the host publishes tokens those unions do not list, and
+  // mobile only compares them to the handful it acts on. See hosted-review-reply-schema.ts.
+  blockedReason?: string | null
+  nextAction?: string | null
   // Why: mobile lacks the desktop refresh/review-lookup signals, so it fails
   // closed on ambiguity. When the host could not prove the branch has no review
   // (`unavailable`), create — including the Push & Create path — stays blocked.
-  reviewLookupOutcome?: HostedReviewLookupOutcome
+  reviewLookupOutcome?: string
 }
 
 // Resolve the mobile compose prefill from the same hosted-review eligibility
@@ -194,7 +190,7 @@ async function pushMobileBranchBeforeCreate(
 }
 
 function formatMobileHostedReviewCreateError(
-  result: CreateHostedReviewResult,
+  result: MobileHostedReviewCreateReply,
   pushed: boolean,
   shortLabel: string
 ): string {
@@ -248,10 +244,9 @@ export async function createMobileHostedReview(
       client,
       buildMobileHostedReviewCreateParams(worktreeId, input)
     )
-    let result: CreateHostedReviewResult
+    let result: MobileHostedReviewCreateReply
     try {
-      // oxlint-disable-next-line typescript/consistent-type-assertions -- SAFETY: Preserve the established response shape at this boundary.
-      result = hostedReviewCreateRun.interpret(reply) as CreateHostedReviewResult
+      result = hostedReviewCreateRun.interpret(reply)
     } catch (error) {
       return {
         ok: false,

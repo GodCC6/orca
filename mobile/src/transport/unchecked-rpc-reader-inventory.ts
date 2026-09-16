@@ -28,7 +28,7 @@ export type UncheckedRpcReaderEntry = {
 /**
  * Files holding at least one unchecked reader, grouped by the feature area that owns them.
  *
- * The reason is shared by every line and is stated once here instead of 42 times: the reply has no
+ * The reason is shared by every line and is stated once here instead of 37 times: the reply has no
  * schema, so the operation declares what the payload is by assertion. Writing one schema per
  * consumed member — required exactly where the consumer reads it unguarded, optional everywhere
  * else, never `.strict()` — turns the assertion into a check and deletes the line.
@@ -67,12 +67,6 @@ export const UNCHECKED_RPC_READERS: readonly UncheckedRpcReaderEntry[] = [
   { file: 'src/session/mobile-session-launch-operations.ts', readers: 7 },
   { file: 'src/session/mobile-session-read-operations.ts', readers: 10 },
   { file: 'src/session/mobile-session-write-operations.ts', readers: 8 },
-  // source-control
-  { file: 'src/source-control/mobile-git-mutation-operations.ts', readers: 7 },
-  { file: 'src/source-control/mobile-git-read-operations.ts', readers: 5 },
-  { file: 'src/source-control/mobile-hosted-review-operations.ts', readers: 2 },
-  { file: 'src/source-control/mobile-source-file-open-operations.ts', readers: 2 },
-  { file: 'src/source-control/mobile-worktree-metadata-operations.ts', readers: 1 },
   // tasks
   { file: 'src/tasks/mobile-task-item-comment-operations.ts', readers: 7 },
   { file: 'src/tasks/mobile-task-item-detail-operations.ts', readers: 8 },
