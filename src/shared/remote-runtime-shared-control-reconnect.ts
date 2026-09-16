@@ -55,7 +55,7 @@ export class SharedControlReconnectScheduler {
   scheduleAfterSocketClose(args: {
     intentionallyClosed: boolean
     manuallyDisconnected: boolean
-    environmentRemoved: boolean
+    environmentRemoved: () => boolean
     capabilityPaused: boolean
     subscriptionCount: number
     open: () => void
@@ -63,16 +63,24 @@ export class SharedControlReconnectScheduler {
     if (
       args.intentionallyClosed ||
       args.manuallyDisconnected ||
-      args.environmentRemoved ||
+      args.environmentRemoved() ||
       (args.subscriptionCount === 0 && args.capabilityPaused)
     ) {
       return
     }
+    // Why re-asked at fire time: removal lands mid-backoff, and a verdict taken before the wait
+    // would still open one more transport for an environment that is already gone.
+    const open = (): void => {
+      if (args.environmentRemoved()) {
+        return
+      }
+      args.open()
+    }
     if (args.subscriptionCount > 0) {
-      this.scheduleWithDefaultBackoff(args.intentionallyClosed, args.open)
+      this.scheduleWithDefaultBackoff(args.intentionallyClosed, open)
       return
     }
-    this.scheduleWithIdleBackoff(args.intentionallyClosed, args.open)
+    this.scheduleWithIdleBackoff(args.intentionallyClosed, open)
   }
 
   // Why: OS resume / browser online should advance an already-scheduled reconnect, not start a new one.

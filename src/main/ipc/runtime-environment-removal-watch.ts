@@ -1,4 +1,5 @@
 import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { getEnvironmentStorePath, listEnvironments } from '../../shared/runtime-environment-store'
 
 // Why: `orca environment rm` runs in a separate CLI process and only rewrites the store, so the
@@ -18,8 +19,21 @@ export function setRuntimeEnvironmentRemovalWatch(
   storedEnvironmentIds.clear()
 }
 
-/** Records the watched store listing this environment, so a later absence becomes evidence. */
-export function noteRuntimeEnvironmentStored(environmentId: string): void {
+/**
+ * Records the watched store listing this environment, so a later absence becomes evidence.
+ *
+ * Why a caller's `userDataPath` beats reading again: the caller already resolved the environment
+ * out of that store, and a removal landing between its read and ours would lose the observation
+ * for good. The path still has to be the watched one, or a foreign store's id would be recorded.
+ */
+export function noteRuntimeEnvironmentStored(environmentId: string, userDataPath?: string): void {
+  const watch = removalWatch
+  if (userDataPath !== undefined) {
+    if (watch && resolve(watch.getUserDataPath()) === resolve(userDataPath)) {
+      storedEnvironmentIds.add(environmentId)
+    }
+    return
+  }
   if (watchedStoreListsEnvironment(environmentId) === true) {
     storedEnvironmentIds.add(environmentId)
   }

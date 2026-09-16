@@ -47,6 +47,9 @@ export function getRuntimeEnvironmentStatusOwner(
   selector: string
 ): RuntimeHostStatusOwner {
   const environment = resolveEnvironment(userDataPath, selector)
+  // Why here: this resolve is the store read that proves the environment exists, and re-reading
+  // later to learn the same thing loses the answer to a removal that lands in between.
+  noteRuntimeEnvironmentStored(environment.id, userDataPath)
   const pairing = getPreferredPairingOffer(environment)
   const key = `${userDataPath}\0${environment.pairingRevision ?? environment.createdAt}\0${getPairingKey(pairing)}`
   let cached = statusOwners.get(environment.id)

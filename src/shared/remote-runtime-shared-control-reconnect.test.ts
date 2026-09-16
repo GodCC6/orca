@@ -28,7 +28,7 @@ describe('SharedControlReconnectScheduler', () => {
     scheduler.scheduleAfterSocketClose({
       intentionallyClosed: false,
       manuallyDisconnected: false,
-      environmentRemoved: true,
+      environmentRemoved: () => true,
       capabilityPaused: false,
       subscriptionCount: 1,
       open
@@ -47,7 +47,7 @@ describe('SharedControlReconnectScheduler', () => {
     scheduler.scheduleAfterSocketClose({
       intentionallyClosed: false,
       manuallyDisconnected: false,
-      environmentRemoved: false,
+      environmentRemoved: () => false,
       capabilityPaused: false,
       subscriptionCount: 1,
       open
@@ -56,6 +56,29 @@ describe('SharedControlReconnectScheduler', () => {
     expect(scheduler.isScheduled).toBe(true)
     vi.advanceTimersByTime(300_000)
     expect(open).toHaveBeenCalledTimes(1)
+  })
+
+  it('drops a pending reconnect when the environment is removed during its backoff', () => {
+    vi.useFakeTimers()
+    const scheduler = new SharedControlReconnectScheduler()
+    const open = vi.fn()
+    let environmentRemoved = false
+
+    scheduler.scheduleAfterSocketClose({
+      intentionallyClosed: false,
+      manuallyDisconnected: false,
+      environmentRemoved: () => environmentRemoved,
+      capabilityPaused: false,
+      subscriptionCount: 1,
+      open
+    })
+    expect(scheduler.isScheduled).toBe(true)
+
+    // Why mid-wait: the verdict taken before the backoff said "still stored".
+    environmentRemoved = true
+    vi.advanceTimersByTime(300_000)
+
+    expect(open).not.toHaveBeenCalled()
   })
 
   it('does not advance cleared or intentionally closed work', () => {

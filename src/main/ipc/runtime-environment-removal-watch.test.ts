@@ -1,6 +1,6 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, sep } from 'node:path'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { encodePairingOffer } from '../../shared/pairing'
 import {
@@ -60,6 +60,37 @@ describe('runtime environment removal watch', () => {
     setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })
     noteRuntimeEnvironmentStored(environmentId)
     removeEnvironment(userDataPath, environmentId)
+
+    expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(true)
+  })
+
+  it('records a resolve that already succeeded, even once the store no longer lists it', () => {
+    const { userDataPath, environmentId } = createStore()
+    setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })
+    // Why removed first: this is the race -- the caller resolved, the CLI removed, and only then
+    // does the observation get recorded. Re-reading the store here would find nothing.
+    removeEnvironment(userDataPath, environmentId)
+    noteRuntimeEnvironmentStored(environmentId, userDataPath)
+
+    expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(true)
+  })
+
+  it('ignores a resolve that came from a different user-data path', () => {
+    const { userDataPath, environmentId } = createStore()
+    const foreignUserDataPath = mkdtempSync(join(tmpdir(), 'orca-removal-watch-foreign-'))
+    tempDirs.push(foreignUserDataPath)
+    setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })
+    removeEnvironment(userDataPath, environmentId)
+    noteRuntimeEnvironmentStored(environmentId, foreignUserDataPath)
+
+    expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(false)
+  })
+
+  it('accepts a watched path written with a trailing separator', () => {
+    const { userDataPath, environmentId } = createStore()
+    setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })
+    removeEnvironment(userDataPath, environmentId)
+    noteRuntimeEnvironmentStored(environmentId, `${userDataPath}${sep}`)
 
     expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(true)
   })

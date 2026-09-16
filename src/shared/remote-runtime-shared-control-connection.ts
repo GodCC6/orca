@@ -282,7 +282,7 @@ export class RemoteRuntimeSharedControlConnection {
     this.reconnect.scheduleAfterSocketClose({
       intentionallyClosed: this.intentionallyClosed,
       manuallyDisconnected: this.options.isManuallyDisconnected?.() ?? false,
-      environmentRemoved: this.options.isEnvironmentRemoved?.() ?? false,
+      environmentRemoved: () => this.options.isEnvironmentRemoved?.() ?? false,
       capabilityPaused: this.options.isCapabilityPaused?.() ?? false,
       subscriptionCount: this.subscriptions.size,
       open: () => this.open()
