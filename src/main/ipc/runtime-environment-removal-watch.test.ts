@@ -64,6 +64,18 @@ describe('runtime environment removal watch', () => {
     expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(true)
   })
 
+  it('judges a removal seen only through repeated checks, with no resolve recorded', () => {
+    const { userDataPath, environmentId } = createStore()
+    setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })
+
+    // Why no note call: a liveness tick observing the id still listed is the only evidence a
+    // connection gets when its construction-time observation never landed.
+    expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(false)
+    removeEnvironment(userDataPath, environmentId)
+
+    expect(isRuntimeEnvironmentRemoved(environmentId)).toBe(true)
+  })
+
   it('records a resolve that already succeeded, even once the store no longer lists it', () => {
     const { userDataPath, environmentId } = createStore()
     setRuntimeEnvironmentRemovalWatch({ getUserDataPath: () => userDataPath, retire: vi.fn() })

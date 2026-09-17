@@ -5,6 +5,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
 import { build as buildVite } from 'vite'
+import { resolveElectronProbeLaunch } from '../browser/electron-probe-display-launch'
+import { REMOTE_RUNTIME_SOCKET_PING_INTERVAL_MS } from '../../shared/remote-runtime-socket-liveness'
 import { REMOTE_RUNTIME_SHARED_CONTROL_CAPABILITY } from '../../shared/protocol-version'
 import { encodePairingOffer } from '../../shared/pairing'
 import {
@@ -23,7 +25,6 @@ import {
 // here. The store rewrite is issued from this process, which is what `orca environment rm` is.
 
 const electronBinary = resolveElectronBinary()
-const LIVENESS_PING_INTERVAL_MS = 10_000
 const roots: string[] = []
 let child: ChildProcess | null = null
 
@@ -134,13 +135,12 @@ describe('runtime environment removed by the CLI', () => {
 
     const { ELECTRON_RUN_AS_NODE: _runAsNode, ...env } = process.env
     const electronArgs = [fixtureDir, `--user-data-dir=${userDataPath}`]
-    // Why: Linux runners have no display, so the shipped binary needs the same xvfb wrapper the
-    // other Electron probes use.
-    const executable = process.platform === 'linux' ? 'xvfb-run' : electronBinary
-    const args =
-      process.platform === 'linux'
-        ? ['--auto-servernum', electronBinary, ...electronArgs, '--no-sandbox']
-        : electronArgs
+    const { executable, args } = resolveElectronProbeLaunch({
+      electronBinary,
+      electronArgs,
+      platform: process.platform,
+      display: env.DISPLAY
+    })
     child = spawn(executable, args, {
       env: { ...env, ORCA_BACKGROUND_LAUNCH: '1' },
       stdio: ['ignore', 'pipe', 'pipe']
@@ -164,10 +164,10 @@ describe('runtime environment removed by the CLI', () => {
 
     await waitFor(
       () => server.openClientCount() === 0,
-      LIVENESS_PING_INTERVAL_MS * 3,
+      REMOTE_RUNTIME_SOCKET_PING_INTERVAL_MS * 3,
       () => `the removed environment to lose its socket (open=${server.openClientCount()})`
     )
-    await delay(LIVENESS_PING_INTERVAL_MS + 2_000)
+    await delay(REMOTE_RUNTIME_SOCKET_PING_INTERVAL_MS + 2_000)
     expect(server.openClientCount()).toBe(0)
     expect(server.connectionCount()).toBe(connectionsWhileStored)
   }, 180_000)
