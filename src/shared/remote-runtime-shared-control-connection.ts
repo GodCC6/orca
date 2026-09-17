@@ -166,7 +166,9 @@ export class RemoteRuntimeSharedControlConnection {
   }
 
   private open(): void {
-    if (this.intentionallyClosed) {
+    // Why removal is re-asked here, not only in the scheduler: a request reaching a closed socket
+    // opens one directly through `ensureReadyWithTimeout`, bypassing the backoff gate entirely.
+    if (this.intentionallyClosed || this.options.isEnvironmentRemoved?.()) {
       sharedControlState.rejectSharedControlReadyWaiters(
         this.readyWaiters,
         remoteRuntimeUnavailableError()

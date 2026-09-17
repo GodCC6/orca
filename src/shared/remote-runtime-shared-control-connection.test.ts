@@ -711,4 +711,35 @@ describe('RemoteRuntimeSharedControlConnection', () => {
     expect(connection.getDiagnostics()).toMatchObject({ state: 'closed' })
     connection.close()
   })
+
+  it('declines a request-driven reopen once its environment is removed', async () => {
+    const server = await createServer()
+    let environmentRemoved = false
+    const connection = new RemoteRuntimeSharedControlConnection(server.pairing, {
+      isEnvironmentRemoved: () => environmentRemoved
+    })
+
+    await connection.request('worktree.ps', undefined, 1000)
+    expect(server.connectionCount()).toBe(1)
+
+    // Removal landing while the socket is down leaves the cached connection inert: the scheduler
+    // declines, so no timer is armed and this is the state a later request finds.
+    environmentRemoved = true
+    server.closeClients()
+    await vi.waitFor(() =>
+      expect(connection.getDiagnostics()).toMatchObject({
+        state: 'closed',
+        lastClose: { code: 4001, reason: 'test close' }
+      })
+    )
+
+    await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow(
+      'Remote Orca runtime closed the connection'
+    )
+    // Why the server-side count and not just the rejection: the defect was a *new socket* dialled
+    // to a removed environment, which a rejected caller would not otherwise reveal.
+    expect(server.connectionCount()).toBe(1)
+
+    connection.close()
+  })
 })
