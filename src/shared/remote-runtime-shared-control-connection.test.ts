@@ -742,4 +742,34 @@ describe('RemoteRuntimeSharedControlConnection', () => {
 
     connection.close()
   })
+
+  it('retires a removed environment when a request finds the socket closed', async () => {
+    const server = await createServer()
+    let environmentRemoved = false
+    let connection: RemoteRuntimeSharedControlConnection | null = null
+    const onEnvironmentRemoved = vi.fn(() => connection?.close())
+    connection = new RemoteRuntimeSharedControlConnection(server.pairing, {
+      isEnvironmentRemoved: () => environmentRemoved,
+      onEnvironmentRemoved
+    })
+
+    await connection.request('worktree.ps', undefined, 1000)
+
+    environmentRemoved = true
+    server.closeClients()
+    await vi.waitFor(() => expect(connection?.getDiagnostics()).toMatchObject({ state: 'closed' }))
+    // Why zero here: the liveness monitor is the only other caller of the retirement callback, and
+    // a closed socket has none left running. Retirement has to come from the next request's path.
+    expect(onEnvironmentRemoved).not.toHaveBeenCalled()
+
+    await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow(
+      'Remote Orca runtime closed the connection'
+    )
+    expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1)
+
+    // Why a second request: retirement closes the connection, so later callers finding the same
+    // retired transport must not re-fire it.
+    await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow()
+    expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1)
+  })
 })

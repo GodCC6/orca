@@ -10,7 +10,7 @@ import { SharedControlReconnectScheduler } from './remote-runtime-shared-control
 import { requestSharedControl } from './remote-runtime-shared-control-requests'
 import { SharedControlRetiredRequestIds } from './remote-runtime-shared-control-retired-request-ids'
 import { SharedControlReadyStableResetTimer } from './remote-runtime-shared-control-stability'
-import * as sharedControlState from './remote-runtime-shared-control-state'
+import { rejectSharedControlReadyWaiters } from './remote-runtime-shared-control-state'
 import { closeSharedControlSocket } from './remote-runtime-shared-control-socket-close'
 import { startSharedControlSubscription } from './remote-runtime-shared-control-subscription-start'
 import { SharedControlSocketGeneration } from './remote-runtime-shared-control-socket-generation'
@@ -169,10 +169,12 @@ export class RemoteRuntimeSharedControlConnection {
     // Why removal is re-asked here, not only in the scheduler: a request reaching a closed socket
     // opens one directly through `ensureReadyWithTimeout`, bypassing the backoff gate entirely.
     if (this.intentionallyClosed || this.options.isEnvironmentRemoved?.()) {
-      sharedControlState.rejectSharedControlReadyWaiters(
-        this.readyWaiters,
-        remoteRuntimeUnavailableError()
-      )
+      rejectSharedControlReadyWaiters(this.readyWaiters, remoteRuntimeUnavailableError())
+      // Why retire from here: declining the dial leaves no liveness monitor, the only other caller
+      // of this callback, so the cached transport would outlive the environment it describes.
+      if (!this.intentionallyClosed) {
+        this.options.onEnvironmentRemoved?.()
+      }
       return
     }
     this.reconnect.clear()
