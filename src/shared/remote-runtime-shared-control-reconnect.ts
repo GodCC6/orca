@@ -68,19 +68,13 @@ export class SharedControlReconnectScheduler {
     ) {
       return
     }
-    // Why re-asked at fire time: removal lands mid-backoff, and a verdict taken before the wait
-    // would still open one more transport for an environment that is already gone.
-    const open = (): void => {
-      if (args.environmentRemoved()) {
-        return
-      }
-      args.open()
-    }
+    // Why the fire is not gated on removal here: open() re-asks the same predicate and retires the
+    // transport from that guard, so short-circuiting the timer would strand what it must evict.
     if (args.subscriptionCount > 0) {
-      this.scheduleWithDefaultBackoff(args.intentionallyClosed, open)
+      this.scheduleWithDefaultBackoff(args.intentionallyClosed, args.open)
       return
     }
-    this.scheduleWithIdleBackoff(args.intentionallyClosed, open)
+    this.scheduleWithIdleBackoff(args.intentionallyClosed, args.open)
   }
 
   // Why: OS resume / browser online should advance an already-scheduled reconnect, not start a new one.

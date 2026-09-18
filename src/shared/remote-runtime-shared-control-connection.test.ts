@@ -772,4 +772,27 @@ describe('RemoteRuntimeSharedControlConnection', () => {
     await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow()
     expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1)
   })
+
+  it('retires a removed environment when its reconnect timer fires', async () => {
+    const server = await createServer()
+    let environmentRemoved = false
+    let connection: RemoteRuntimeSharedControlConnection | null = null
+    const onEnvironmentRemoved = vi.fn(() => connection?.close())
+    connection = new RemoteRuntimeSharedControlConnection(server.pairing, {
+      isEnvironmentRemoved: () => environmentRemoved,
+      onEnvironmentRemoved,
+      // Why flip from here: the removal has to land after the scheduler armed its timer and before
+      // it fires, the one window no request passes through.
+      onDiagnosticsChanged: ({ state }) => {
+        environmentRemoved ||= state === 'reconnecting'
+      }
+    })
+
+    await connection.request('worktree.ps', undefined, 1000)
+    server.closeClients()
+
+    await vi.waitFor(() => expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1), { timeout: 5000 })
+    // Why the server-side count: retiring must not cost a dial to an environment that is gone.
+    expect(server.connectionCount()).toBe(1)
+  })
 })

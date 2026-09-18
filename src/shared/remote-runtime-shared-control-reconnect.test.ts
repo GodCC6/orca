@@ -58,7 +58,7 @@ describe('SharedControlReconnectScheduler', () => {
     expect(open).toHaveBeenCalledTimes(1)
   })
 
-  it('drops a pending reconnect when the environment is removed during its backoff', () => {
+  it('fires a pending reconnect after a mid-backoff removal so open() can retire it', () => {
     vi.useFakeTimers()
     const scheduler = new SharedControlReconnectScheduler()
     const open = vi.fn()
@@ -74,11 +74,12 @@ describe('SharedControlReconnectScheduler', () => {
     })
     expect(scheduler.isScheduled).toBe(true)
 
-    // Why mid-wait: the verdict taken before the backoff said "still stored".
+    // Why mid-wait: the verdict taken before the backoff said "still stored". The fire is handed
+    // to open(), which re-asks and retires there; declining here would strand the transport.
     environmentRemoved = true
     vi.advanceTimersByTime(300_000)
 
-    expect(open).not.toHaveBeenCalled()
+    expect(open).toHaveBeenCalledTimes(1)
   })
 
   it('does not advance cleared or intentionally closed work', () => {
