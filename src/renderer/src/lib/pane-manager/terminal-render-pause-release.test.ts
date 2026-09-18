@@ -304,6 +304,24 @@ describe("xterm's owed full repaint", () => {
     expect(renderService._needsFullRefresh).toBe(true)
   })
 
+  it('keeps the latch on the DEC 2026 path, the one present that bypasses refreshRows', () => {
+    const renderRows = vi.fn()
+    const renderService = createUnattachedWebglService({
+      _renderer: { value: { renderRows, _isAttached: false } }
+    })
+    const terminal = createTerminal({
+      rows: 24,
+      renderService,
+      synchronizedOutput: true,
+      screenConnected: false
+    })
+
+    expect(forceFullViewportPresent(terminal)).toBe(false)
+    expect(renderRows).toHaveBeenCalledWith(0, 23)
+    expect(renderService._isPaused).toBe(false)
+    expect(renderService._needsFullRefresh).toBe(true)
+  })
+
   it('reports an unpainted forced present as not presented', () => {
     const renderService = createUnattachedWebglService()
     const terminal = createTerminal({ rows: 24, renderService, screenConnected: false })
