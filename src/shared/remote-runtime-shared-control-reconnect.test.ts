@@ -35,8 +35,11 @@ describe('SharedControlReconnectScheduler', () => {
     })
 
     expect(scheduler.isScheduled).toBe(false)
+    // Why once rather than never: the close is handed to open(), whose guard retires the transport
+    // instead of dialling. Nothing is armed, so the backoff adds no second call.
+    expect(open).toHaveBeenCalledTimes(1)
     vi.advanceTimersByTime(300_000)
-    expect(open).not.toHaveBeenCalled()
+    expect(open).toHaveBeenCalledTimes(1)
   })
 
   it('keeps reconnecting a subscribed socket while the environment is still stored', () => {

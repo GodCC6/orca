@@ -63,13 +63,18 @@ export class SharedControlReconnectScheduler {
     if (
       args.intentionallyClosed ||
       args.manuallyDisconnected ||
-      args.environmentRemoved() ||
       (args.subscriptionCount === 0 && args.capabilityPaused)
     ) {
       return
     }
-    // Why the fire is not gated on removal here: open() re-asks the same predicate and retires the
-    // transport from that guard, so short-circuiting the timer would strand what it must evict.
+    // Why open() instead of a bare return: its guard declines the dial *and* retires, and a socket
+    // closing after the removal has no liveness tick left to do that.
+    if (args.environmentRemoved()) {
+      args.open()
+      return
+    }
+    // Why the fire is not gated on removal either: open() re-asks the same predicate on every entry,
+    // so short-circuiting the timer would strand the transport it must evict.
     if (args.subscriptionCount > 0) {
       this.scheduleWithDefaultBackoff(args.intentionallyClosed, args.open)
       return

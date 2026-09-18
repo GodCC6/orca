@@ -114,7 +114,9 @@ describe('runtime environment shared-control connection cache', () => {
 
     removeEnvironment(userDataPath, environmentId)
     server.closeClients()
-    await waitFor(() => getRemoteRuntimeSharedControlDiagnostics(environmentId)?.state === 'closed')
+    // Why the cache entry disappears rather than settling on 'closed': the close observes the
+    // removal and retires the transport, which is what leaves nothing behind to retry.
+    await waitFor(() => getRemoteRuntimeSharedControlDiagnostics(environmentId) === null)
     await delay(400)
 
     expect(server.connectionCount()).toBe(1)

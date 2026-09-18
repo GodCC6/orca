@@ -755,11 +755,15 @@ describe('RemoteRuntimeSharedControlConnection', () => {
 
     await connection.request('worktree.ps', undefined, 1000)
 
-    environmentRemoved = true
+    // Why the socket closes while the environment is still stored and the retry is then paused:
+    // that leaves no live socket, no armed timer and no close-time observation of the removal, so
+    // the next request is the only thing that can retire it.
     server.closeClients()
-    await vi.waitFor(() => expect(connection?.getDiagnostics()).toMatchObject({ state: 'closed' }))
-    // Why zero here: the liveness monitor is the only other caller of the retirement callback, and
-    // a closed socket has none left running. Retirement has to come from the next request's path.
+    await vi.waitFor(() =>
+      expect(connection?.getDiagnostics()).toMatchObject({ state: 'reconnecting' })
+    )
+    connection.pauseStandingRetry()
+    environmentRemoved = true
     expect(onEnvironmentRemoved).not.toHaveBeenCalled()
 
     await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow(
@@ -771,6 +775,27 @@ describe('RemoteRuntimeSharedControlConnection', () => {
     // retired transport must not re-fire it.
     await expect(connection.request('worktree.ps', undefined, 1000)).rejects.toThrow()
     expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1)
+  })
+
+  it('retires a removed environment when its socket closes', async () => {
+    const server = await createServer()
+    let environmentRemoved = false
+    let connection: RemoteRuntimeSharedControlConnection | null = null
+    const onEnvironmentRemoved = vi.fn(() => connection?.close())
+    connection = new RemoteRuntimeSharedControlConnection(server.pairing, {
+      isEnvironmentRemoved: () => environmentRemoved,
+      onEnvironmentRemoved
+    })
+
+    await connection.request('worktree.ps', undefined, 1000)
+
+    // Why this ordering: the removal is already known when the socket drops, so no reconnect is
+    // armed and the closed socket has no liveness tick left to retire it.
+    environmentRemoved = true
+    server.closeClients()
+
+    await vi.waitFor(() => expect(onEnvironmentRemoved).toHaveBeenCalledTimes(1), { timeout: 5000 })
+    expect(server.connectionCount()).toBe(1)
   })
 
   it('retires a removed environment when its reconnect timer fires', async () => {
